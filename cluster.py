@@ -19,8 +19,8 @@ class Cluster(object):
     def __init__(self):
         self.num_clusters = NUM_CLUSTERS
         self.freq_matrix = None
-        self.labels = None
-        self.clusters = None
+        self.assignments = None
+        self.centroids = None
 
     # data file assumed to be in .npy file format
     def load_data(self,data_file = DATA_FILE):
@@ -32,18 +32,18 @@ class Cluster(object):
 
         try:
             kmeans = KMEANS(n_clusters = NUM_CLUSTERS,random_state=0).fit(self.freq_matrix)
-            self.labels = kmeans.labels_
-            self.clusters = kmeans.cluster_centers_
+            self.assignments = kmeans.labels_
+            self.centroids = kmeans.cluster_centers_
         except:
             print "Data read-in error!"
 
     # labels represents index of the cluster that each sample belongs to
-    def get_labels(self):
-        return self.labels
+    def get_assignments(self):
+        return self.assignments
 
     # Coordinate position of the cluster
     def get_clusters(self):
-        return self.clusters
+        return self.centroids
 
     # Coordinate position of the cluster nearest to the data point passed in
     def cluster_assignment(self,data_file):
