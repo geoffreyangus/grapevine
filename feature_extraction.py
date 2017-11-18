@@ -50,3 +50,6 @@ class Feature_Extractor(object):
             current_json = self.json_list[i]
             review_str = current_json[review] #review is the key of the review content
             self.freq_matrix[i,:] = count_freq(review_str)
+
+    def save_matrix(self):
+        np.save('frequency_matrix.npy',self.freq_matrix)

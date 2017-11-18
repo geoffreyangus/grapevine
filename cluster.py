@@ -9,6 +9,7 @@ from sklearn.cluster import KMeans
 import numpy as np
 
 NUM_CLUSTERS = 20 # number of clusters
+DATA_FILE = 'data.npy' # some file that contains the matrix
 
 # Read in a new input and add it to the current
 # history of what has been clustered, calls on sklearn package
@@ -22,7 +23,7 @@ class Cluster(object):
         self.clusters = None
 
     # data file assumed to be in .npy file format
-    def load_data(self,data_file):
+    def load_data(self,data_file = DATA_FILE):
         self.freq_matrix = np.load(data_file)
 
     # Freq_Matrix is a matrix containing the normalized frequencies of the
