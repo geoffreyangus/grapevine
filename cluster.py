@@ -9,7 +9,7 @@ from sklearn.cluster import KMeans
 import numpy as np
 
 NUM_CLUSTERS = 20 # number of clusters
-DATA_FILE = 'data.npy' # some file that contains the matrix
+DATA_FILE = 'frequency_matrix.npy' # file that contains the matrix
 
 # Read in a new input and add it to the current
 # history of what has been clustered, calls on sklearn package
@@ -30,7 +30,6 @@ class Cluster(object):
     # Freq_Matrix is a matrix containing the normalized frequencies of the
     # words in the wine reviews; each row represents one wine review
     def cluster_data(self):
-
         try:
             self.kmeans = KMEANS(n_clusters = NUM_CLUSTERS,random_state=0).fit(self.freq_matrix)
             self.assignments = self.kmeans.labels_

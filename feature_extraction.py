@@ -35,6 +35,9 @@ class Feature_Extractor(object):
         self.json_list = read_json()
         self.word_corpus = read_word_corpus()
         self.freq_matrix = np.zeros((len(self.json_list),len(self.word_corpus)))
+        # entry 1 is the price and entry 2 is the rating for each row which
+        # represents each wine
+        self.wine_features = np.zeros((len(self.json_list),2))
 
     def count_freq(review):
         len_words = len(review)
@@ -44,12 +47,19 @@ class Feature_Extractor(object):
             freq_array[index] += 1
         return freq_array/len_words
 
+    # For now these parse methods are written seperately for debugging pruposes,
+    # but should be combined in a latter version of the program for efficiency.
+
     def parse_reviews(self):
-        num_wines = len(self.json_list)
-        for i in range(num_wines):
-            current_json = self.json_list[i]
+        for i,current_json in enumerate(self.json_list):
             review_str = current_json[review] #review is the key of the review content
             self.freq_matrix[i,:] = count_freq(review_str)
+
+    def parse_features(self):
+        for i,current_json in enumerate(self.json_list):
+            price = int(current_json[price])
+            rating = int(current_json[rating])
+            self.wine_features[i,;] = [price,rating]
 
     def save_matrix(self):
         np.save('frequency_matrix.npy',self.freq_matrix)

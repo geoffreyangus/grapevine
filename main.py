@@ -7,8 +7,7 @@ from cluster import Cluster
 from predictor import Predictor
 
 def main():
-    p
-
+    
 
 if __name__ == '__main__':
     main()

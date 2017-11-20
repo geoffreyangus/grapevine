@@ -11,12 +11,6 @@ clusters of wine. The Class then determines the optimal prediction by:
 
 import numpy as np
 
-'''
-def run_k_means(Cluster_Data):
-    Cluster_Data.load_data()
-    Cluster_Data.cluster_data()
-    return (Cluster_Data.get_clusters(),Cluster_Data.get_labels())
-'''
 
 class Predictor(object):
     def __init__(self,centroids,assignments):
@@ -50,8 +44,14 @@ class Predictor(object):
         cluster_probs = cluster_response/cluster_size
         cluster_prop = cluster_size / sum_reponses
 
+        delta = (1 - np.dot(cluster_probs,cluster_prop))/num_clusters
         # The probability with which we want to sample from each of the clusters
-        sampling_probs = cluster_probs 
+        sampling_probs = delta * np.multiply(cluster_probs, cluster_prop)
+        return np.random.choice(k,1,sampling_probs)
+
+
+        #NOTE: how do we choose the probability for cluster that we
+        # have not sampled from before?
 
 
 # Look over all of the clusters from which we have samples wines
