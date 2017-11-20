@@ -41,18 +41,17 @@ class Predictor(object):
             cluster_size[cluster] += 1
             cluster_response[cluster] += self.prediction_response[i]
         sum_responses = self.prediction_history.shape[0]
-        cluster_probs = cluster_response/cluster_size
-        cluster_prop = cluster_size / sum_reponses
-
-        delta = (1 - np.dot(cluster_probs,cluster_prop))/num_clusters
-        # The probability with which we want to sample from each of the clusters
-        sampling_probs = delta * np.multiply(cluster_probs, cluster_prop)
+        epsilon = sum_responses/2 # arbitrarily selected biar
+        # multiplication of each cluster probability with the size of the cluster
+        denominator = np.multiply(cluster_size, cluster_response)
+        sampling_probs = [(i+(epsilon/num_clusters))/(np.sum(denominator)+epsilon) for i in denominator]
         return np.random.choice(k,1,sampling_probs)
-
-
-        #NOTE: how do we choose the probability for cluster that we
-        # have not sampled from before?
-
+        # NOTE: Commented out original suggestion for finding cluster
+        # cluster_probs = cluster_response/cluster_size
+        # cluster_prop = cluster_size / sum_reponses
+        # delta = (1 - np.dot(cluster_probs,cluster_prop))/num_clusters
+        # The probability with which we want to sample from each of the clusters
+        # sampling_probs = delta * np.multiply(cluster_probs, cluster_prop)
 
 # Look over all of the clusters from which we have samples wines
     def calculate_cost(self):
