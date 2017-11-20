@@ -1,0 +1,9 @@
+to do:
+
+- Feature Extraction --> how do we want to best encode information about the price
+ and the quality of wine
+- When we start off we ask the user for the amount of wines that we  are clustering
+ by --> is there a more efficient way to do this
+ - What kind of optimization do we want to use?
+ - Are we doing any sort of regularization?
+ - How do we want to interact and get responses back from the user? 
