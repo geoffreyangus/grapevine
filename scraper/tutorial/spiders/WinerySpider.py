@@ -7,6 +7,8 @@ from scrapy_splash import SplashFormRequest
 
 import re
 
+# GRAPEVINE NAME CREDITS GO TO LYDIA ZEMMALI
+
 class WinerySpider(InitSpider):
 	name = 'wineries'
 	allowed_domains = ['winespectator.com']

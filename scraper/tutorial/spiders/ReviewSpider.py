@@ -90,16 +90,17 @@ class ReviewSpider(InitSpider):
 		index = response.meta['index']
 		page = response.meta['page']
 
+		url = self.wineries[index]['url']
 		reviews = response.css('table')
 		print '==============PARSING ('+self.wineries[index]['name']+')=============='
 		if reviews:
 			tbody = response.css('table').css('tbody')
-			reviews = self.parseReviewTable(tbody)
+			reviews = self.parseReviewTable(url, tbody)
 			for review in reviews:
 				yield review
 		else:
 			container = response.css('div.mod-container')
-			yield self.parseReviewPage(container)
+			yield self.parseReviewPage(url, container)
 
 		num_pages = response.css('div.pagination a')
 		if (num_pages and page < len(num_pages)):
@@ -135,7 +136,7 @@ class ReviewSpider(InitSpider):
 		last = 29 + (url[29:].index('&'))
 		return url[:first] + str(page) + url[last:]
 
-	def cleanTableReview(self, rawReview):
+	def cleanReviewTable(self, rawReview):
 		return {
 			'name': re.search(r'<\/strong>([^<]*)', rawReview['name']).groups()[0].replace(u'\xa0', u''),
 			'winery': re.search(r'>([^<]*)<', rawReview['winery']).groups()[0],
@@ -144,10 +145,11 @@ class ReviewSpider(InitSpider):
 			'score': rawReview['score'].replace('<td>', '').replace('</td>', ''),
 			'price:': rawReview['price'].replace('<td>', '').replace('</td>', ''),
 			'country': re.search(r'Country:</strong> ([^<]*)', rawReview['country']).groups()[0].replace(u'\xa0', u'').replace(u'\u2022', u''),
-			'region': re.search(r'Region:</strong> ([^<]*)', rawReview['region']).groups()[0].replace(u'\xa0', u'').replace(u'\u2022', u'')
+			'region': re.search(r'Region:</strong> ([^<]*)', rawReview['region']).groups()[0].replace(u'\xa0', u'').replace(u'\u2022', u''),
+			'url': rawReview['url']
 		}
 
-	def parseReviewTable(self, tbody):
+	def parseReviewTable(self, url, tbody):
 		processedReviews = []
 
 		reviews = tbody.css('tr')
@@ -166,12 +168,13 @@ class ReviewSpider(InitSpider):
 			location = review.css('div.collapse .paragraph').extract()[0]
 			rawReview['country'] = location
 			rawReview['region'] = location
+			rawReview['url'] = url
 
-			processedReview = self.cleanTableReview(rawReview)
+			processedReview = self.cleanReviewTable(rawReview)
 			processedReviews.append(processedReview)
 		return processedReviews
 
-	def cleanPageReview(self, rawReview):
+	def cleanReviewPage(self, rawReview):
 		return {
 			'name': rawReview['name'].replace('<h4>', '').replace('</h4>', '')[:-5],
 			'winery': re.search(r'">([^<]*)', rawReview['winery']).groups()[0],
@@ -180,10 +183,11 @@ class ReviewSpider(InitSpider):
 			'score': re.search(r'Score: ([^<]*)', rawReview['score']).groups()[0],
 			'price': re.search(r'<\/strong>([^<]*)', rawReview['price']).groups()[0][1:],
 			'country': re.search(r'<\/strong>([^<]*)', rawReview['country']).groups()[0][1:],
-			'region': re.search(r'<\/strong>([^<]*)', rawReview['region']).groups()[0][1:]
+			'region': re.search(r'<\/strong>([^<]*)', rawReview['region']).groups()[0][1:],
+			'url': rawReview['url']
 		}
 
-	def parseReviewPage(self, container):
+	def parseReviewPage(self, url, container):
 		paragraphs = container.css('div.paragraph').extract()
 		rawReview = {
 			'name': container.css('h4').extract()[0],
@@ -193,9 +197,10 @@ class ReviewSpider(InitSpider):
 			'score': container.css('h5').extract()[0],
 			'price': paragraphs[0],
 			'country': paragraphs[1],
-			'region': paragraphs[2]
+			'region': paragraphs[2],
+			'url': url
 		}
-		processedReview = self.cleanPageReview(rawReview)
+		processedReview = self.cleanReviewPage(rawReview)
 		return processedReview
 
 
