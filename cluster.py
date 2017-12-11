@@ -2,40 +2,61 @@
 Clustering.py
 -----------------------
 Input: Cluster Class receives a matrix of word frequency counts that have been
-normalized by TSIDF (term frequency–inverse document frequency). The algorithm
+normalized by TFIDF (term frequency–inverse document frequency). The algorithm
 uses the sklearn package for the K-means clustering algorithm.
 '''
 from sklearn.cluster import KMeans
 import numpy as np
+from scipy import sparse
+from scipy.sparse import csr_matrix
+import pickle
+import time
 
-NUM_CLUSTERS = 20 # number of clusters
-DATA_FILE = 'frequency_matrix.npy' # file that contains the matrix
+NUM_CLUSTERS = 10 # number of clusters
+FREQ_DATA = 'word_freq.npz' # file that contains the matrix
+FEAT_DATA = 'raw_features.npz'
+OUTPUT_MODEL = 'k_means_model.sav'
 
-# Read in a new input and add it to the current
-# history of what has been clustered, calls on sklearn package
-# and can return the cluster assignment for a queuery point
+# data file assumed to be in .npy file format
+def load_data(freq_data,features_data):
+    return(sparse.load_npz(freq_data),sparse.load_npz(features_data))
+
+'''
+num_clusters: number of clusters
+freq_matrix: tfidf matrix of the word frequency in the data set
+feature_matrix: loads in the remaining feature matrix
+assignments,centroids,kmeans: parameters related to the clustering library
+
+Read in a new input and add it to the current
+history of what has been clustered, calls on sklearn package
+and can return the cluster assignment for a queuery point
+'''
 
 class Cluster(object):
-    def __init__(self):
-        self.num_clusters = NUM_CLUSTERS
-        self.freq_matrix = None
+    def __init__(self,freq_data = FREQ_DATA,features_data = FEAT_DATA,num_clusters = NUM_CLUSTERS):
+        self.num_clusters = num_clusters
+        print('...Initializing Cluster...')
+        compressed_freq,compressed_feature = load_data(freq_data,features_data)
+        self.freq_matrix = compressed_freq
+        self.feature_matrix = compressed_feature
+
         self.assignments = None
         self.centroids = None
         self.kmeans = None
-
-    # data file assumed to be in .npy file format
-    def load_data(self,data_file = DATA_FILE):
-        self.freq_matrix = np.load(data_file)
 
     # Freq_Matrix is a matrix containing the normalized frequencies of the
     # words in the wine reviews; each row represents one wine review
     def cluster_data(self):
         try:
-            self.kmeans = KMEANS(n_clusters = NUM_CLUSTERS,random_state=0).fit(self.freq_matrix)
+            print('...Clustering...')
+            start_time = time.time()
+            self.kmeans = KMeans(n_clusters = NUM_CLUSTERS).fit(self.freq_matrix)
             self.assignments = self.kmeans.labels_
             self.centroids = self.kmeans.cluster_centers_
+            print('Clustering finished in: ', (time.time() - start_time))
         except:
             print ("Data read-in error!")
+        pickle.dump(self.kmeans,open(OUTPUT_MODEL,'wb'))
 
     # labels represents index of the cluster that each sample belongs to
     def get_assignments(self):

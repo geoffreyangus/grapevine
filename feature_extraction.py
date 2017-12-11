@@ -10,6 +10,8 @@ these into the frequency matrix.
 '''
 
 import numpy as np
+from scipy import sparse
+from scipy.sparse import csr_matrix
 import json
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -28,7 +30,7 @@ def read_json(json_file):
     print('...Done...')
     return dictionary
 
-class Feature_Extractor(object):
+class FeatureExtractor(object):
     '''
     Json List, Reviews, Word_Freq, Data_Features
     Models: v (Dict Vetorizer), w (TfidfVectorizer)
@@ -36,25 +38,42 @@ class Feature_Extractor(object):
     def __init__(self,json_file):
         self.json_list = read_json(json_file)
         self.reviews = []
+        self.feat_dic = []
         print('...Cleaning Data...')
         for json in self.json_list:
-            self.reviews.append(json['review'])
+            # removing wine reviews that have a score less than 80
             try:
-                del json['url']
-                del json['name']
+                if (int(json['score']) < 80):
+                    self.json_list.remove(json)
+                    continue
+            except:
+                self.json_list.remove(json)
+                continue
+            # Adding only the relevant features that we want to
+            # analyze to the feature dictionary (feat_dic)
+            json_feat = {}
+            try:
+                json_feat['country'] = json['country']
+                json_feat['winery'] = json['winery']
+                json_feat['region'] = json['region']
+                json_feat['vintage'] =json['vintage']
             except KeyError:
                 pass
+            self.feat_dic.append(json_feat)
+            self.reviews.append(json['review'])
         print('...Parsing Data...')
         self.v = DictVectorizer(sparse=True)
         self.w = TfidfVectorizer(input='content')
-        self.word_freq = self.w.fit(self.reviews)
-        self.data_features = self.v.fit(self.json_list)
+        self.word_freq = csr_matrix(self.w.fit_transform(self.reviews).toarray())
+        self.data_features = csr_matrix(self.v.fit_transform(self.feat_dic).toarray())
+        print('size word freq', self.word_freq.shape)
+        print('data feats freq', self.data_features.shape)
         print('...Saving Data...')
         self.save_matrix()
 
     def save_matrix(self):
-        np.save('raw_features.npy',self.data_features)
-        np.save('word_freq.npy',self.word_freq)
+        sparse.save_npz('raw_features.npz',self.data_features)
+        sparse.save_npz('word_freq.npz',self.word_freq)
         pass
 
     def get_feature_names(self):
