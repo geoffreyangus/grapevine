@@ -6,6 +6,7 @@ NUM_CLUSTERS = 5 # number of clusters
 FREQ_DATA = 'word_freq.npz' # file that contains the matrix
 FEAT_DATA = 'raw_features.npz'
 OUTPUT_MODEL = 'k_means_model.sav'
+OUTPUT_MODEL_EM = 'em_model.sav'
 JSON_FILE = 'data/reviews.json'
 PICKLE_FILE = 'k_means_model.sav'
 SAMPLE_REVIEWS_FILE = './data/sample_reviews.json'
