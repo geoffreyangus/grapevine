@@ -64,13 +64,14 @@ class FeatureExtractor(object):
             except KeyError:
                 pass
             self.feat_dic.append(json_feat)
-            reviewTokens = json['review'].split(' ')
+            reviewTokens = json['review'].replace('.','').replace(',', '').split(' ')
             filteredTokens = []
             STOPWORDS = util.getStopwords()
             for token in reviewTokens:
-                if token.isdigit() or token.lower() in STOPWORDS:
+                loweredToken = token.lower() # lol
+                if token.isdigit() or loweredToken in STOPWORDS:
                     continue
-                filteredTokens.append(token)
+                filteredTokens.append(loweredToken)
             self.reviews.append(' '.join(filteredTokens))
         self.save_filtered_reviews()
 
@@ -111,7 +112,7 @@ class FeatureExtractor(object):
         if os.path.isfile(util.REVIEW_VOCABULARY_FILE):
             result = np.load(util.REVIEW_VOCABULARY_FILE + '.npy')
         else:
-            result = self.v.vocabulary_
+            result = self.w.vocabulary_
         return result
 
     def save_matrix(self):
