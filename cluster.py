@@ -11,15 +11,12 @@ from scipy import sparse
 from scipy.sparse import csr_matrix
 import pickle
 import time
-
-NUM_CLUSTERS = 10 # number of clusters
-FREQ_DATA = 'word_freq.npz' # file that contains the matrix
-FEAT_DATA = 'raw_features.npz'
-OUTPUT_MODEL = 'k_means_model.sav'
+import util
+import os
 
 # data file assumed to be in .npy file format
 def load_data(freq_data,features_data):
-    return(sparse.load_npz(freq_data),sparse.load_npz(features_data))
+    return(sparse.load_npz(freq_data), sparse.load_npz(features_data))
 
 '''
 num_clusters: number of clusters
@@ -33,10 +30,10 @@ and can return the cluster assignment for a queuery point
 '''
 
 class Cluster(object):
-    def __init__(self,freq_data = FREQ_DATA,features_data = FEAT_DATA,num_clusters = NUM_CLUSTERS):
+    def __init__(self, freq_data=util.FREQ_DATA, features_data=util.FEAT_DATA, num_clusters=util.NUM_CLUSTERS):
         self.num_clusters = num_clusters
         print('...Initializing Cluster...')
-        compressed_freq,compressed_feature = load_data(freq_data,features_data)
+        compressed_freq, compressed_feature = load_data(freq_data ,features_data)
         self.freq_matrix = compressed_freq
         self.feature_matrix = compressed_feature
 
@@ -47,16 +44,21 @@ class Cluster(object):
     # Freq_Matrix is a matrix containing the normalized frequencies of the
     # words in the wine reviews; each row represents one wine review
     def cluster_data(self):
+        # if os.path.isfile(util.PICKLE_FILE):
+        #     self.kmeans = pickle.load(open(util.PICKLE_FILE, 'rb'))
+        #     self.assignments = self.kmeans.labels_
+        #     self.centroids = self.kmeans.cluster_centers_
+        #     return
         try:
             print('...Clustering...')
             start_time = time.time()
-            self.kmeans = KMeans(n_clusters = NUM_CLUSTERS).fit(self.freq_matrix)
+            self.kmeans = KMeans(n_clusters = util.NUM_CLUSTERS).fit(self.freq_matrix)
             self.assignments = self.kmeans.labels_
             self.centroids = self.kmeans.cluster_centers_
             print('Clustering finished in: ', (time.time() - start_time))
         except:
             print ("Data read-in error!")
-        pickle.dump(self.kmeans,open(OUTPUT_MODEL,'wb'))
+        pickle.dump(self.kmeans,open(util.OUTPUT_MODEL,'wb'))
 
     # labels represents index of the cluster that each sample belongs to
     def get_assignments(self):
@@ -67,6 +69,6 @@ class Cluster(object):
         return self.centroids
 
     # Coordinate position of the cluster nearest to the data point passed in
-    def cluster_assignment(self,data_file):
+    def cluster_assignment(self, data_file):
         new_data = np.load(data_file)
         return self.kmeans.predict(new_data)

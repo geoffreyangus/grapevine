@@ -47,7 +47,7 @@ class Predictor(object):
         sampling_probs = [(i+(epsilon/num_clusters))/(np.sum(denominator)+epsilon) for i in denominator]
         return np.random.choice(k,1,sampling_probs)
         # NOTE: Commented out original suggestion for finding cluster
-        # cluster_probs = cluster_response/cluster_size
+        # cluster_probs = cluster_response / cluster_size
         # cluster_prop = cluster_size / sum_reponses
         # delta = (1 - np.dot(cluster_probs,cluster_prop))/num_clusters
         # The probability with which we want to sample from each of the clusters
@@ -64,3 +64,4 @@ class Predictor(object):
         pass
 
     def get_response(self):
+        pass

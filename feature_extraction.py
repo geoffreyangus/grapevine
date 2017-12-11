@@ -15,11 +15,11 @@ from scipy.sparse import csr_matrix
 import json
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
-
-CORPUS_FILE = 'data/word_corpus.txt'
+import os
+import util
 
 # reads in a corpus of english words
-def read_word_corpus(text_file = CORPUS_FILE):
+def read_word_corpus(text_file = util.CORPUS_FILE):
     with open(text_file,'r') as f:
         return [x.strip() for x in f.readlines()]
 
@@ -35,10 +35,14 @@ class FeatureExtractor(object):
     Json List, Reviews, Word_Freq, Data_Features
     Models: v (Dict Vetorizer), w (TfidfVectorizer)
     '''
-    def __init__(self,json_file):
-        self.json_list = read_json(json_file)
+    def __init__(self):
         self.reviews = []
         self.feat_dic = []
+        self.v = DictVectorizer(sparse=True)
+        self.w = TfidfVectorizer(input='content')
+
+    def filter_reviews(self, json_list):
+        self.json_list = read_json(json_list)
         print('...Cleaning Data...')
         for json in self.json_list:
             # removing wine reviews that have a score less than 80
@@ -60,21 +64,60 @@ class FeatureExtractor(object):
             except KeyError:
                 pass
             self.feat_dic.append(json_feat)
-            self.reviews.append(json['review'])
+            reviewTokens = json['review'].split(' ')
+            filteredTokens = []
+            STOPWORDS = util.getStopwords()
+            for token in reviewTokens:
+                if token.isdigit() or token in STOPWORDS:
+                    continue
+                filteredTokens.append(token)
+            self.reviews.append(' '.join(filteredTokens))
+        self.save_filtered_reviews()
+
+    def process_reviews(self):
         print('...Parsing Data...')
-        self.v = DictVectorizer(sparse=True)
-        self.w = TfidfVectorizer(input='content')
         self.word_freq = csr_matrix(self.w.fit_transform(self.reviews).toarray())
         self.data_features = csr_matrix(self.v.fit_transform(self.feat_dic).toarray())
         print('size word freq', self.word_freq.shape)
         print('data feats freq', self.data_features.shape)
+
+    def save_data(self):
         print('...Saving Data...')
+        self.save_vocabulary()
         self.save_matrix()
+
+    def extract(self, json_file):
+        if not (os.path.isfile(util.FILTERED_REVIEWS_FILE) and os.path.isfile(util.FILTERED_FEATURE_DICT_FILE)):
+            self.filter_reviews(json_file)
+        else:
+            with open(util.FILTERED_REVIEWS_FILE, 'r') as f:
+                self.reviews = json.load(f)
+            with open(util.FILTERED_FEATURE_DICT_FILE, 'r') as f:
+                self.feat_dic = json.load(f)
+        self.process_reviews()
+        self.save_data()
+
+    def save_filtered_reviews(self):
+        with open(util.FILTERED_REVIEWS_FILE, 'w+') as f:
+            json.dump(self.reviews, f, indent=4)
+        with open(util.FILTERED_FEATURE_DICT_FILE, 'w+') as f:
+            json.dump(self.feat_dic, f, indent=4)
+
+    def save_vocabulary(self):
+        np.save(util.REVIEW_VOCABULARY_FILE, self.w.vocabulary_)
+
+    def get_review_vocabulary(self):
+        result = {}
+        if os.path.isfile(util.REVIEW_VOCABULARY_FILE):
+            result = np.load(util.REVIEW_VOCABULARY_FILE + '.npy')
+        else:
+            result = self.v.vocabulary_
+        return result
 
     def save_matrix(self):
         sparse.save_npz('raw_features.npz',self.data_features)
         sparse.save_npz('word_freq.npz',self.word_freq)
-        pass
+        return
 
     def get_feature_names(self):
         return self.v.get_feature_names()
