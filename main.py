@@ -52,7 +52,7 @@ def extract_data(file = util.JSON_FILE):
 		vocabulary = features.get_review_vocabulary()
 	else:
 		vocabulary = np.load('./data/review_vocabulary.npy')[()]
-		
+
 	vocabulary = dict((v,k) for k,v in vocabulary.items())
 	print(10 * '.','Finished Extracting Features',10 * '.')
 	return vocabulary
