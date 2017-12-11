@@ -12,33 +12,12 @@ import json
 import numpy as np
 import util
 import collections
-
-def unpickle():
-	model = pickle.load(open(util.PICKLE_FILE, 'rb'))
-	return model
-
-def print_performance(model, vocabulary):
-	centroids = model.get_clusters()
-	assignment_indices = model.get_assignments()
-	assignments = collections.defaultdict(int)
-	for index in assignment_indices:
-		assignments[index] += 1
-	numWords = 25
-	for i in range(len(centroids)):
-		tfidfIndices = [(centroids[i][j], j) for j in range(centroids[i].shape[0])] # list of (score, index in centroid vector)
-		tfidfIndices = sorted(tfidfIndices, key=lambda x: x[0], reverse=True)
-		print('top '+ str(numWords) + ' words in centroid ' + str(i) + ' with size ' + str(assignments[i]))
-		numPrinted = 0
-		k = -1
-		while numPrinted < numWords:
-			k += 1
-			if vocabulary[tfidfIndices[k][1]] in util.getStopwords() or vocabulary[tfidfIndices[k][1]].isdigit(): continue
-			print(vocabulary[tfidfIndices[k][1]])#, tfidfIndices[k][0])
-			numPrinted += 1
+import sys
+import gv_view
+from history_manager import History
 
 def cluster_data():
 	print('...Clustering Data...')
-	# cluster_model = Cluster()
 	cluster_model = Cluster()
 	cluster_model.cluster_data()
 	return cluster_model
@@ -46,7 +25,7 @@ def cluster_data():
 def extract_data(file = util.JSON_FILE):
 	vocabulary = {}
 	if(not (os.path.isfile('word_freq.npz') and os.path.isfile('raw_features.npz') and os.path.isfile('./data/review_vocabulary.npy'))):
-		print(10 * '.',' Extracting Features',10 * '.')
+		print(10 * '.',' Extracting Features', 10 * '.')
 		features = FeatureExtractor()
 		features.extract(file)
 		vocabulary = features.get_review_vocabulary()
@@ -57,10 +36,43 @@ def extract_data(file = util.JSON_FILE):
 	print(10 * '.','Finished Extracting Features',10 * '.')
 	return vocabulary
 
+def hasValidFlags():
+	if sys.argv[1] == '-h' or sys.argv[1] == '--history':
+		return True 
+	return False
+
 def main():
+	if not ((len(sys.argv) == 3 and hasValidFlags()) or len(sys.argv) == 1):
+		print('usage python2.7 main.py [--history | -h] [history.json]')
+		return
+
+	examples = util.read_json(util.SAMPLE_REVIEWS_FILE)
+	example_features = util.load_features(util.FREQ_DATA)
+	default_wines = [(examples[i], i) for i in range(len(examples[:10]))]
+	if len(sys.argv) == 3:
+		gv_view.display_greeting()
+		history = History(sys.argv[2])
+		if history.length() == 0:
+			gv_view.display_no_history_message(default_wines)
+			indices = input('').split(',')
+			for index in indices:
+				index = int(index)
+				if index in range(1, len(default_wines) + 1):
+					true_index = default_wines[index-1][1]
+					history.add_wine(true_index, [0] * 10 + [1], 1)
+				else:
+					print('invalid index')
+
+		history.save_state()
+		# predictor = Predictor(model, history)
+		return
+
 	vocabulary = extract_data(file=util.SAMPLE_REVIEWS_FILE)
 	model = cluster_data()
-	print_performance(model, vocabulary)
-
+	# quantify success
+	util.print_performance(model, vocabulary)
+	sse = util.output_sse(model, example_features)
+	print(sse)
+	print(sum(sse.values()))
 if __name__ == '__main__':
 	main()

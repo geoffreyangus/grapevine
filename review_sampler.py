@@ -2,15 +2,8 @@ import util
 import json
 import numpy as np
 
-def read_json(json_file):
-    print('...Loading in JSON...')
-    with open(json_file,'r') as f:
-        dictionary = json.load(f)
-    print('...Done...')
-    return dictionary
-
-def main():
-	dictionary = read_json(util.FILTERED_REVIEWS_FILE)
+def select_review_samples():
+	dictionary = util.read_json(util.FILTERED_REVIEWS_FILE)
 	m = len(dictionary)
 	sample = np.random.choice(range(m), size=int(m / 5), replace=False)
 	sample_reviews = []
@@ -21,6 +14,9 @@ def main():
 
 	with open(util.SAMPLE_REVIEWS_FILE, 'w+') as f:
 		json.dump(sample_reviews, f, indent=4)
+
+def main():
+	select_review_samples()
 
 if __name__ == '__main__':
 	main()

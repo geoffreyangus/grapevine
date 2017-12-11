@@ -8,7 +8,6 @@ then first hard clusters data (followed by soft-cluster depending on if
 EM algorithm was used as the unsupervised learning algorithm). Afterwards,
 the optimal wine is selected by maximizing a cost function.
 '''
-
 import numpy as np
 import random
 from scipy import sparse
@@ -56,7 +55,6 @@ def extra_cluster(history,model):
     probs = [num[k]*(pos[k]/pos_total)*(1-neg[k]/neg_total) for k in num_clusters]
     probs = probs/sum(probs)
     return random.choices(range(num_clusters),weights=probs, k=1)
-
 
 class Predictor(object):
     def __init__(self):

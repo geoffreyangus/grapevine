@@ -18,18 +18,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import os
 import util
 
-# reads in a corpus of english words
-def read_word_corpus(text_file = util.CORPUS_FILE):
-    with open(text_file,'r') as f:
-        return [x.strip() for x in f.readlines()]
-
-def read_json(json_file):
-    print('...Loading in JSON...')
-    with open(json_file,'r') as f:
-        dictionary = json.load(f)
-    print('...Done...')
-    return dictionary
-
 class FeatureExtractor(object):
     '''
     Json List, Reviews, Word_Freq, Data_Features
@@ -42,7 +30,7 @@ class FeatureExtractor(object):
         self.w = TfidfVectorizer(input='content')
 
     def filter_reviews(self, json_list):
-        self.json_list = read_json(json_list)
+        self.json_list = util.read_json(json_list)
         print('...Cleaning Data...')
         for json in self.json_list:
             # removing wine reviews that have a score less than 80
@@ -88,12 +76,12 @@ class FeatureExtractor(object):
         self.save_matrix()
 
     def extract(self, json_file):
-        if not (os.path.isfile(util.FILTERED_REVIEWS_FILE) and os.path.isfile(util.FILTERED_FEATURE_DICT_FILE)):
+        if not (os.path.isfile(util.FILTERED_REVIEWS_FILE) and os.path.isfile(util.FILTERED_FEAT_DICT_FILE)):
             self.filter_reviews(json_file)
         else:
             with open(util.FILTERED_REVIEWS_FILE, 'r') as f:
                 self.reviews = json.load(f)
-            with open(util.FILTERED_FEATURE_DICT_FILE, 'r') as f:
+            with open(util.FILTERED_FEAT_DICT_FILE, 'r') as f:
                 self.feat_dic = json.load(f)
         self.process_reviews()
         self.save_data()
@@ -101,7 +89,7 @@ class FeatureExtractor(object):
     def save_filtered_reviews(self):
         with open(util.FILTERED_REVIEWS_FILE, 'w+') as f:
             json.dump(self.reviews, f, indent=4)
-        with open(util.FILTERED_FEATURE_DICT_FILE, 'w+') as f:
+        with open(util.FILTERED_FEAT_DICT_FILE, 'w+') as f:
             json.dump(self.feat_dic, f, indent=4)
 
     def save_vocabulary(self):

@@ -14,10 +14,6 @@ import time
 import util
 import os
 
-# data file assumed to be in .npy file format
-def load_data(freq_data,features_data):
-    return(sparse.load_npz(freq_data), sparse.load_npz(features_data))
-
 '''
 num_clusters: number of clusters
 freq_matrix: tfidf matrix of the word frequency in the data set
@@ -33,19 +29,21 @@ class Cluster(object):
     def __init__(self, freq_data=util.FREQ_DATA, features_data=util.FEAT_DATA, num_clusters=util.NUM_CLUSTERS):
         self.num_clusters = num_clusters
         print('...Initializing Cluster...')
-        compressed_freq, compressed_feature = load_data(freq_data ,features_data)
+        compressed_freq = util.load_features(freq_data)
+        compressed_feature = util.load_features(features_data)
         self.freq_matrix = compressed_freq
         self.feature_matrix = compressed_feature
 
         self.assignments = None
         self.centroids = None
         self.kmeans = None
+        self.pickle_filename = util.PICKLE_NAME + str(self.num_clusters) + '.sav'
 
     # Freq_Matrix is a matrix containing the normalized frequencies of the
     # words in the wine reviews; each row represents one wine review
     def cluster_data(self):
-        # if os.path.isfile(util.PICKLE_FILE):
-        #     self.kmeans = pickle.load(open(util.PICKLE_FILE, 'rb'))
+        # if os.path.isfile(self.pickle_filename):
+        #     self.kmeans = pickle.load(open(self.pickle_filename, 'rb'))
         #     self.assignments = self.kmeans.labels_
         #     self.centroids = self.kmeans.cluster_centers_
         #     return
@@ -58,7 +56,7 @@ class Cluster(object):
             print('Clustering finished in: ', (time.time() - start_time))
         except:
             print ("Data read-in error!")
-        pickle.dump(self.kmeans,open(util.OUTPUT_MODEL,'wb'))
+        pickle.dump(self.kmeans,open(self.pickle_filename,'wb'))
 
     # labels represents index of the cluster that each sample belongs to
     def get_assignments(self):
