@@ -48,18 +48,17 @@ def extract_data(file = util.JSON_FILE):
 	if(not (os.path.isfile('word_freq.npz') and os.path.isfile('raw_features.npz') and os.path.isfile('./data/review_vocabulary.npy'))):
 		print(10 * '.',' Extracting Features',10 * '.')
 		features = FeatureExtractor()
-		features.extract(util.JSON_FILE)
+		features.extract(file)
 		vocabulary = features.get_review_vocabulary()
 	else:
-		vocabulary = np.load('./data/review_vocabulary.npy')
-
-	vocabulary = vocabulary[()]
+		vocabulary = np.load('./data/review_vocabulary.npy')[()]
+		
 	vocabulary = dict((v,k) for k,v in vocabulary.items())
 	print(10 * '.','Finished Extracting Features',10 * '.')
 	return vocabulary
 
 def main():
-	vocabulary = extract_data()
+	vocabulary = extract_data(file=util.SAMPLE_REVIEWS_FILE)
 	model = cluster_data()
 	print_performance(model, vocabulary)
 

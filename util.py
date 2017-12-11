@@ -11,10 +11,9 @@ PICKLE_FILE = 'k_means_model.sav'
 SAMPLE_REVIEWS_FILE = './data/sample_reviews.json'
 SAMPLE_FEATURE_DICT_FILE = './data/sample_feat_dict.json'
 
-STOPWORDS = None
 def getStopwords():
-	if not STOPWORDS: 
-		with open('stopwords.txt') as f:
-			STOPWORDS = f.readlines();
-			STOPWORDS = set([s[:-1] for s in STOPWORDS])
+	STOPWORDS = set()
+	with open('stopwords.txt') as f:
+		STOPWORDS = f.readlines();
+		STOPWORDS = set([s[:-1] for s in STOPWORDS])
 	return STOPWORDS

@@ -68,7 +68,7 @@ class FeatureExtractor(object):
             filteredTokens = []
             STOPWORDS = util.getStopwords()
             for token in reviewTokens:
-                if token.isdigit() or token in STOPWORDS:
+                if token.isdigit() or token.lower() in STOPWORDS:
                     continue
                 filteredTokens.append(token)
             self.reviews.append(' '.join(filteredTokens))
