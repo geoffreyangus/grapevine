@@ -36,8 +36,8 @@ select_cluster: returns the index of the cluster in which we want to begin
 our analysis of the ideal wine selection.s
 '''
 
-THRESHOLD = 0.1
-LAMBDA = 1
+THRESHOLD = 0.2
+LAMBDA = 100
 NUM_BETS = 3
 NUM_WILDCARDS = 1
 
@@ -90,6 +90,7 @@ class Predictor(object):
 
         # # Construct final set of random numbers (with correct mean)
         # rand = mean + np.matmul(L, norm)[0]
+
         return mean + [np.random.normal(loc=mean[i], scale=covariance) for i in range(len(mean))]
 
     def select_cluster_coordinates(self, history, cluster_index, covariance):
@@ -101,24 +102,29 @@ class Predictor(object):
         random_history_wine = random.choice(cluster_history)
         random_history_wine_index = random_history_wine['true_index']
         sample_mean = self.features[random_history_wine_index].toarray()[0]
-        print('Sampling from a multivariate normal...')
+        # print('Sampling from a multivariate normal...')
         benchmark_coordinates = sample_mean if covariance == 0 else self.multivariate_sample(sample_mean, covariance)
-        print('Selecting nearest wine from the following benchmark coordinate:')
-        print(benchmark_coordinates)
+        # print('Selecting nearest wine from the following benchmark coordinate:')
+        # print(benchmark_coordinates)
         return benchmark_coordinates
 
     def get_search_space(self, model, history, cluster_index, benchmark_coordinates):
         search_space = []
         if(type(model) == ClusterEM):
             em_model = model.em
-            cluster_scores = em_model.predict_proba(benchmark_coordinates)
+            cluster_scores = em_model.predict_proba(benchmark_coordinates.reshape(1, -1))[0]
+            print(cluster_scores)
             cluster_scores = sorted([(cluster_scores[j], j) for j in range(len(cluster_scores))], key=lambda x: x[0], reverse=True)
-            em_assignments = sparse.load_npz('em_assignments.npz').toarray()
+            em_assignments = np.load('em_assignments.npy')
+            target_clusters = set()
+            target_clusters.add(cluster_scores[0][1])
             if(cluster_scores[0][0] - cluster_scores[1][0] < THRESHOLD):
-                for i in range(len()):
-                    max_assignment = np.argmax(em_assignments[i,:])
-                    if max_assignment == cluster_scores[0][1] or max_assignment == cluster_scores[1][1]: 
-                        search_space.append(i) #appending the ith index of the wine in dataset
+                target_clusters.add(cluster_scores[1][1])
+            print('Selecting from the following clusters...', target_clusters)
+            for i in range(len(em_assignments)):
+                max_assignment = np.argmax(em_assignments[i,:])
+                if max_assignment in target_clusters: 
+                    search_space.append(i) # appending the ith index of the wine in dataset
         else:
             kmeans_model = model.kmeans
             for i in range(len(kmeans_model.assignments_)): 
@@ -127,27 +133,46 @@ class Predictor(object):
 
         return search_space
 
-    def select_wine(benchmark_coordinates, search_space, examples, features):
-        quality = np.asarray([examples[i]['price'] / examples[i]['score'] for i in search_space])
-        similarity = np.asarray([cosine(features[i], benchmark_coordinates) for i in search_space])
+    def select_wine(self, benchmark_coordinates, search_space, examples, features, current_recommendations):
+        prices = []
+        for example in examples:
+            price_key = ''
+            if 'price' in example.keys():
+                price_key = 'price'
+            else:
+                price_key = 'price:'
+            price_string = example[price_key]
+            slash_index  = price_string.rfind('/')
+            price_string = price_string[1:] if slash_index == -1 else price_string[1:slash_index]
+            prices.append(int(price_string) if price_string.isdigit() else float('inf'))
+        scores = []
+        for example in examples:
+            scores.append(float('-inf') if not example['score'].isdigit() else float(example['score']))
+        quality = np.asarray([prices[true_index] / scores[true_index] for true_index in search_space])
+        similarity = np.asarray([cosine(features[0].toarray()[0], benchmark_coordinates) for true_index in search_space])
         cost = quality + LAMBDA * similarity
-        return np.argmax(cost)
+        selection = np.argmin(cost)
+        while selection in current_recommendations:
+            cost[selection] = float('inf')
+            selection = np.argmin(cost)
+        print('Choosing wine with index',selection,'with price', prices[selection])
+        return selection
 
     def predict(self, model, history, examples, features):
         recommendations = []
         for i in range(NUM_BETS):
             cluster_index = self.select_cluster(history) # one cluster index
-            covariance = 0 if type(model) == KMeans else model.get_covariances()[cluster_index] * 10
+            covariance = 0 if type(model) == KMeans else model.get_covariances()[cluster_index]
             benchmark_coordinates = self.select_cluster_coordinates(history, cluster_index, covariance) # Selecting the wine options from which we will optimize to find the ideal wine
             search_space = self.get_search_space(model, history, cluster_index, benchmark_coordinates)
-            recommendation = self.select_wine(benchmark_coordinates, search_space, examples, features)
+            recommendation = self.select_wine(benchmark_coordinates, search_space, examples, features, recommendations)
             recommendations.append(recommendation)
         for i in range(NUM_WILDCARDS):
             cluster_index = self.select_cluster(history) # one cluster index
             covariance = 0 if type(model) == KMeans else model.get_covariances()[cluster_index] * 20
             benchmark_coordinates = self.select_cluster_coordinates(history, cluster_index, covariance) # Selecting the wine options from which we will optimize to find the ideal wine
             search_space = self.get_search_space(model, history, cluster_index, benchmark_coordinates)
-            recommendation = self.select_wine(benchmark_coordinates, search_space, examples, features)
+            recommendation = self.select_wine(benchmark_coordinates, search_space, examples, features, recommendations)
             recommendations.append(recommendation)
         return recommendations              
 

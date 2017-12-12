@@ -3,8 +3,10 @@ import json
 from scipy.spatial import distance
 import collections
 import hashlib
+import numpy as np
 
 CORPUS_FILE = 'data/word_corpus.txt'
+UNPROCESSED_FILTERED_REVIEWS_FILE = './data/unprocessed_filtered_reviews.json'
 FILTERED_REVIEWS_FILE = './data/filtered_reviews.json'
 REVIEW_VOCABULARY_FILE = './data/review_vocabulary'
 FILTERED_FEAT_DICT_FILE = './data/filtered_feat_dict.json'
@@ -31,10 +33,10 @@ def getStopwords():
 	return STOPWORDS
 
 def read_json(json_file):
-    print('...Loading in JSON...')
+    # print('...Loading in JSON...')
     with open(json_file,'r') as f:
         dictionary = json.load(f)
-    print('...Done...')
+    # print('...Done...')
     return dictionary
 
 def print_performance_em(model,vocabulary):
@@ -43,10 +45,11 @@ def print_performance_em(model,vocabulary):
 	for i in range(means.shape[0]):
 		mean = means[i,:]
 		max_indices = np.argsort(mean)[-max_words:]
-		top_words = []
-	for j in range(max_words):
-		top_words.append(vocabulary[max_indices[-j]])
-	print('Cluster,', i+1, 'top words: ', top_words)
+		print('Top words of cluster', i)
+		tfidfIndices = [(means[i][j], j) for j in range(means[i].shape[0])] # list of (score, index in centroid vector)
+		tfidfIndices = sorted(tfidfIndices, key=lambda x: x[0], reverse=True)
+		for j in range(max_words):
+			print('--', vocabulary[max_indices[-j]]) #, tfidfIndices[j][0])
 
 def print_performance_km(model, vocabulary):
 	centroids = model.get_clusters()

@@ -17,11 +17,18 @@ class History(object):
 		new_wine['cluster_scores'] = cluster_scores
 		new_wine['user_feedback'] = feedback
 		self.wines.append(new_wine)
-		print(new_wine)
 
 	def save_state(self):
-		with open(self.filename, 'w+') as f:
+		with open(self.filename, 'w') as f:
 			json.dump(self.wines, f, indent=4)
 
 	def get_history(self):
 		return self.wines
+
+	def set_history(self, wines): # wine tuples (true_index, assignments, user_feedback)
+		self.wines = []
+		for wine in wines:
+			index = wine[0]
+			assignments = wine[1]
+			user_feedback = wine[2]
+			self.add_wine(index, assignments, user_feedback)

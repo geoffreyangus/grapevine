@@ -72,9 +72,12 @@ class ClusterEM(object):
         return self.em.predict_proba(data_point)
 
     def create_assignments(self):
-        print('...Creating Assignments for EM Model ...')
+        # print('...Creating Assignments for EM Model ...')
         # assuming that the data matrix has already been loaded in the run_model()
         # step
+        if os.path.isfile('em_assignments.npy'):
+            return np.load('em_assignments.npy')
+
         self.assignments = self.predict_probs(self.data_matrix)
         # --------- Temporary Code -------
         # Storing out matrix also so that we do not need to re-run algorithm
@@ -82,7 +85,4 @@ class ClusterEM(object):
         return self.assignments
 
     def get_assignments(self):
-        if os.path.isfile('em_assignments.npy'):
-            return np.load('em_assignments.npy')
-        else:
-            return self.create_assignments()
+        return self.create_assignments()

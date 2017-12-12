@@ -91,6 +91,8 @@ class FeatureExtractor(object):
             json.dump(self.reviews, f, indent=4)
         with open(util.FILTERED_FEAT_DICT_FILE, 'w+') as f:
             json.dump(self.feat_dic, f, indent=4)
+        with open(util.UNPROCESSED_FILTERED_REVIEWS_FILE, 'w+') as f:
+            json.dump(self.json_list, f, indent=4)
 
     def save_vocabulary(self):
         np.save(util.REVIEW_VOCABULARY_FILE, self.w.vocabulary_)

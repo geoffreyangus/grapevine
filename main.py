@@ -53,13 +53,20 @@ def main():
 		print('usage python2.7 main.py [--history | -h] [history.json]')
 		return
 
+
 	vocabulary = extract_data(file=util.SAMPLE_REVIEWS_FILE)
 	model = run_em()
 	assignments = model.get_assignments()
 
-	examples = util.read_json(util.SAMPLE_REVIEWS_FILE)
+	examples = util.read_json(util.UNPROCESSED_FILTERED_REVIEWS_FILE)
+	cleaned_examples = util.read_json(util.FILTERED_REVIEWS_FILE)
 	example_features = util.load_features(util.FREQ_DATA)
-	print(examples[41])
+	
+	util.print_performance_em(model.em, vocabulary)
+
+	# print(example_features[15854])
+	# print(cleaned_examples[15854])
+
 	default_wines = [(examples[i], i) for i in range(len(examples[:10]))]
 	if len(sys.argv) == 3:
 		gv_view.display_greeting()
@@ -70,15 +77,35 @@ def main():
 			for index in indices:
 				index = int(index)
 				if index in range(1, len(default_wines) + 1):
-					true_index = default_wines[index-1][1]
+					true_index = default_wines[index - 1][1]
 					history.add_wine(true_index, list(assignments[true_index]), 1)
 				else:
 					print('invalid index')
 
+		else:
+			history_max = 0
+			new_history = []
+			for i in range(len(assignments)):
+				true_index = i
+				assignment = assignments[i]
+				if np.argmax(assignment) == 8:
+					history_max += 1
+					new_history.append((true_index, list(assignment), 1))
+					if history_max == 20:
+						break
+			history.set_history(new_history)
 		history.save_state()
+		# return
 		predictor = Predictor(examples, example_features)
 		recommendations = predictor.predict(model, history, examples, example_features)
-		print(recommendations)
+		print('-------HISTORY-------')
+		for wine in history.get_history():
+			print('--',cleaned_examples[wine['true_index']])
+		print('---RECOMMENDATIONS---')
+		for true_index in recommendations:
+			if true_index == recommendations[-1]:
+				print('------WILDCARD-------')
+			print('--', cleaned_examples[true_index])
 		return
 
 	# util.print_performance_km(model, vocabulary)
