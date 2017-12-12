@@ -42,11 +42,11 @@ class Cluster(object):
     # Freq_Matrix is a matrix containing the normalized frequencies of the
     # words in the wine reviews; each row represents one wine review
     def cluster_data(self):
-        # if os.path.isfile(self.pickle_filename):
-        #     self.kmeans = pickle.load(open(self.pickle_filename, 'rb'))
-        #     self.assignments = self.kmeans.labels_
-        #     self.centroids = self.kmeans.cluster_centers_
-        #     return
+        if os.path.isfile(self.pickle_filename):
+            self.kmeans = pickle.load(open(self.pickle_filename, 'rb'))
+            self.assignments = self.kmeans.labels_
+            self.centroids = self.kmeans.cluster_centers_
+            return
         try:
             print('...Clustering...')
             start_time = time.time()

@@ -12,6 +12,10 @@ import numpy as np
 import random
 from scipy import sparse
 from scipy.sparse import csr_matrix
+from cluster_em import ClusterEM
+from cluster import Cluster
+from scipy.spatial.distance import cosine
+from sklearn.cluster import KMeans
 
 '''
 History brought in as a File of JSON obects in the form of:
@@ -28,104 +32,122 @@ wine_id: MD5 hash
 
 '''
 '''
-extra_cluster: returns the index of the cluster in which we want to begin
+select_cluster: returns the index of the cluster in which we want to begin
 our analysis of the ideal wine selection.s
 '''
 
-def extra_cluster(history,model):
-    num_clusters = model.num_clusters()
+THRESHOLD = 0.1
+LAMBDA = 1
+NUM_BETS = 3
+NUM_WILDCARDS = 1
 
-    probs = np.zeros(num_clusters) #Final probabilities that we will return (multinomial)
-    pos = np.zeros(num_clusters)
-    neg = np.zeros(num_clusters)
-    num_wines = np.zeros(num_clusters)
-    denominator = 0
-    for wine in history:
-        cluster_assignment = wine['cluster']
-        if(user_feedback == 1):
-            pos[cluster_assignment] += 1
-        else
-            neg[cluster_assignment] += 1
-        num_wines[cluster_assignment] += 1
+class Predictor(object):
+
+    def __init__(self, examples, features):
+        self.examples = examples
+        self.features = features
+
+    def select_cluster(self, history):
+        history_wines = history.get_history()
+        num_clusters = len(history_wines[0]['cluster_scores'])
+        probs = np.zeros(num_clusters) #Final probabilities that we will return (multinomial)
+        pos = np.zeros(num_clusters)
+        neg = np.zeros(num_clusters)
+        num_wines = np.zeros(num_clusters)
+        denominator = 0
+        for wine in history_wines:
+            cluster_assignment = np.argmax(wine['cluster_scores'])
+            user_feedback = wine['user_feedback']
+            if(user_feedback == 1):
+                pos[cluster_assignment] += 1
+            else:
+                neg[cluster_assignment] += 1
+            num_wines[cluster_assignment] += 1
 
         pos_total = np.sum(pos)
         neg_total = np.sum(neg)
+        neg_total = 1 if neg_total == 0 else neg_total
         num_total = np.sum(num_wines)
 
-    probs = [num[k]*(pos[k]/pos_total)*(1-neg[k]/neg_total) for k in num_clusters]
-    probs = probs/sum(probs)
-    return random.choices(range(num_clusters),weights=probs, k=1)
+        probs = [num_wines[k] * (pos[k] / pos_total) * (1-neg[k] / neg_total) for k in range(num_clusters)]
+        probs = probs / sum(probs)
+        choice = np.random.choice(range(num_clusters), p=probs)
+        print('Selected cluster:',choice)
+        return choice
 
-class Predictor(object):
-    def __init__(self):
-        pass
+    # Source: https://philbull.wordpress.com/2012/09/27/drawing-random-numbers-from-a-multivariate-gaussian/
+    def multivariate_sample(self, mean, covariance):
+        N = len(mean)
+        # mean = ... # some array of length N
+        # cov = ... # some positive-definite NxN matrix
+        # draws = 1
 
-    def predict(self,model,history):
-        cluster_index = extra_cluster(history)
-        wine_options = [] # Selecting the wine options from which we will
-                          # optimize to find the ideal wine
+        # # Do factorisation (can store this and use it again later)
+        # L = np.linalg.cholesky(covariance)
+
+        # # Get 3*draws Gaussian random variables (mean=0, variance=1)
+        # norm = np.random.normal(size=draws*N).reshape(N, draws)
+
+        # # Construct final set of random numbers (with correct mean)
+        # rand = mean + np.matmul(L, norm)[0]
+        return mean + [np.random.normal(loc=mean[i], scale=covariance) for i in range(len(mean))]
+
+    def select_cluster_coordinates(self, history, cluster_index, covariance):
+        cluster_history = []
+        history_wines = history.get_history()
+        for wine in history_wines: 
+            if np.argmax(np.asarray(wine['cluster_scores'])) == cluster_index:
+                cluster_history.append(wine)
+        random_history_wine = random.choice(cluster_history)
+        random_history_wine_index = random_history_wine['true_index']
+        sample_mean = self.features[random_history_wine_index].toarray()[0]
+        print('Sampling from a multivariate normal...')
+        benchmark_coordinates = sample_mean if covariance == 0 else self.multivariate_sample(sample_mean, covariance)
+        print('Selecting nearest wine from the following benchmark coordinate:')
+        print(benchmark_coordinates)
+        return benchmark_coordinates
+
+    def get_search_space(self, model, history, cluster_index, benchmark_coordinates):
+        search_space = []
         if(type(model) == ClusterEM):
-
+            em_model = model.em
+            cluster_scores = em_model.predict_proba(benchmark_coordinates)
+            cluster_scores = sorted([(cluster_scores[j], j) for j in range(len(cluster_scores))], key=lambda x: x[0], reverse=True)
+            em_assignments = sparse.load_npz('em_assignments.npz').toarray()
+            if(cluster_scores[0][0] - cluster_scores[1][0] < THRESHOLD):
+                for i in range(len()):
+                    max_assignment = np.argmax(em_assignments[i,:])
+                    if max_assignment == cluster_scores[0][1] or max_assignment == cluster_scores[1][1]: 
+                        search_space.append(i) #appending the ith index of the wine in dataset
         else:
-            #NOTE: EM doesn't have assignments!
-            for i in range(len(model.assignments)):
-                if(model_assignments[i] == cluster_index):
-                    wine_options.append(i)
+            kmeans_model = model.kmeans
+            for i in range(len(kmeans_model.assignments_)): 
+                if kmeans_model.assignments_[i] == cluster_index: 
+                    search_space.append(i)
 
+        return search_space
 
+    def select_wine(benchmark_coordinates, search_space, examples, features):
+        quality = np.asarray([examples[i]['price'] / examples[i]['score'] for i in search_space])
+        similarity = np.asarray([cosine(features[i], benchmark_coordinates) for i in search_space])
+        cost = quality + LAMBDA * similarity
+        return np.argmax(cost)
 
-        self.centroids = centroids # a vector with all of the centroids
-        self.assignments = assignments # a vector with all of the assingments
-        # History of Recommendations
-        self.prediction_history = np.zeros(assignments.shape)
-        # History of the clusters in which the recommended wine was drawn from
-        self.cluster_history = np.zeros(assignments.shape)
-        # How the user responded to the recommendations
-        self.prediction_response = np.zeros(assignments.shape)
+    def predict(self, model, history, examples, features):
+        recommendations = []
+        for i in range(NUM_BETS):
+            cluster_index = self.select_cluster(history) # one cluster index
+            covariance = 0 if type(model) == KMeans else model.get_covariances()[cluster_index] * 10
+            benchmark_coordinates = self.select_cluster_coordinates(history, cluster_index, covariance) # Selecting the wine options from which we will optimize to find the ideal wine
+            search_space = self.get_search_space(model, history, cluster_index, benchmark_coordinates)
+            recommendation = self.select_wine(benchmark_coordinates, search_space, examples, features)
+            recommendations.append(recommendation)
+        for i in range(NUM_WILDCARDS):
+            cluster_index = self.select_cluster(history) # one cluster index
+            covariance = 0 if type(model) == KMeans else model.get_covariances()[cluster_index] * 20
+            benchmark_coordinates = self.select_cluster_coordinates(history, cluster_index, covariance) # Selecting the wine options from which we will optimize to find the ideal wine
+            search_space = self.get_search_space(model, history, cluster_index, benchmark_coordinates)
+            recommendation = self.select_wine(benchmark_coordinates, search_space, examples, features)
+            recommendations.append(recommendation)
+        return recommendations              
 
-
-    def new_prediction(self,cluster_assignment):
-        opt_cluster = self.find_cluster()
-        opt_wine = self.calculate_cost(opt_cluster)
-        pass
-
-    # Algorithm that for a set ofpast wines predict where we will be
-    # drawing the new wine from. Looks over the entire history of wine
-    # recommendations
-
-    def find_cluster(self):
-
-
-
-
-        a, num_clusters = np.unique(self.cluster_history,return_counts = True)
-        cluster_size = np.zeros((num_clusters,1))
-        cluster_response = np.zeros((num_clusters,1))
-        for i,cluster in enumerate(self.cluster_history):
-            cluster_size[cluster] += 1
-            cluster_response[cluster] += self.prediction_response[i]
-        sum_responses = self.prediction_history.shape[0]
-        epsilon = sum_responses/2 # arbitrarily selected biar
-        # multiplication of each cluster probability with the size of the cluster
-        denominator = np.multiply(cluster_size, cluster_response)
-        sampling_probs = [(i+(epsilon/num_clusters))/(np.sum(denominator)+epsilon) for i in denominator]
-        return np.random.choice(k,1,sampling_probs)
-        # NOTE: Commented out original suggestion for finding cluster
-        # cluster_probs = cluster_response / cluster_size
-        # cluster_prop = cluster_size / sum_reponses
-        # delta = (1 - np.dot(cluster_probs,cluster_prop))/num_clusters
-        # The probability with which we want to sample from each of the clusters
-        # sampling_probs = delta * np.multiply(cluster_probs, cluster_prop)
-
-# Look over all of the clusters from which we have samples wines
-    def calculate_cost(self):
-        num_clusters = np.unique(self.cluster_history)
-        # Find the cluster and how many times the user liked
-        # the output of this cluster, keep a running count of how many
-        # elements are within this cluster
-        for i in range(num_clusters):
-            pass
-        pass
-
-    def get_response(self):
-        pass

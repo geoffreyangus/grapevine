@@ -8,11 +8,11 @@ CORPUS_FILE = 'data/word_corpus.txt'
 FILTERED_REVIEWS_FILE = './data/filtered_reviews.json'
 REVIEW_VOCABULARY_FILE = './data/review_vocabulary'
 FILTERED_FEAT_DICT_FILE = './data/filtered_feat_dict.json'
-NUM_CLUSTERS = 20 # number of clusters
+NUM_CLUSTERS = 12 # number of clusters
 FREQ_DATA = 'word_freq.npz' # file that contains the matrix
 FEAT_DATA = 'raw_features.npz'
 OUTPUT_MODEL = 'k_means_model.sav'
-OUTPUT_MODEL_EM = 'em_model'
+OUTPUT_MODEL_EM = 'em_model_12.sav'
 JSON_FILE = 'data/reviews.json'
 PICKLE_NAME = 'k_means_model'
 SAMPLE_REVIEWS_FILE = './data/sample_reviews.json'
@@ -37,7 +37,18 @@ def read_json(json_file):
     print('...Done...')
     return dictionary
 
-def print_performance(model, vocabulary):
+def print_performance_em(model,vocabulary):
+	max_words = 10
+	means = model.means_
+	for i in range(means.shape[0]):
+		mean = means[i,:]
+		max_indices = np.argsort(mean)[-max_words:]
+		top_words = []
+	for j in range(max_words):
+		top_words.append(vocabulary[max_indices[-j]])
+	print('Cluster,', i+1, 'top words: ', top_words)
+
+def print_performance_km(model, vocabulary):
 	centroids = model.get_clusters()
 	assignment_indices = model.get_assignments()
 	assignments = collections.defaultdict(int)

@@ -4,6 +4,7 @@ a user wine.
 '''
 
 from cluster import Cluster
+from cluster_em import ClusterEM
 from predictor import Predictor
 from feature_extraction import FeatureExtractor
 import os.path
@@ -16,7 +17,13 @@ import sys
 import gv_view
 from history_manager import History
 
-def cluster_data():
+def run_em():
+	print('...Running EM Algorithm...')
+	em_model = ClusterEM()
+	em_model.run_model()
+	return em_model
+
+def run_km():
 	print('...Clustering Data...')
 	cluster_model = Cluster()
 	cluster_model.cluster_data()
@@ -46,8 +53,13 @@ def main():
 		print('usage python2.7 main.py [--history | -h] [history.json]')
 		return
 
+	vocabulary = extract_data(file=util.SAMPLE_REVIEWS_FILE)
+	model = run_em()
+	assignments = model.get_assignments()
+
 	examples = util.read_json(util.SAMPLE_REVIEWS_FILE)
 	example_features = util.load_features(util.FREQ_DATA)
+	print(examples[41])
 	default_wines = [(examples[i], i) for i in range(len(examples[:10]))]
 	if len(sys.argv) == 3:
 		gv_view.display_greeting()
@@ -59,20 +71,22 @@ def main():
 				index = int(index)
 				if index in range(1, len(default_wines) + 1):
 					true_index = default_wines[index-1][1]
-					history.add_wine(true_index, [0] * 10 + [1], 1)
+					history.add_wine(true_index, list(assignments[true_index]), 1)
 				else:
 					print('invalid index')
 
 		history.save_state()
-		# predictor = Predictor(model, history)
+		predictor = Predictor(examples, example_features)
+		recommendations = predictor.predict(model, history, examples, example_features)
+		print(recommendations)
 		return
 
-	vocabulary = extract_data(file=util.SAMPLE_REVIEWS_FILE)
-	model = cluster_data()
+	# util.print_performance_km(model, vocabulary)
 	# quantify success
-	util.print_performance(model, vocabulary)
-	sse = util.output_sse(model, example_features)
-	print(sse)
-	print(sum(sse.values()))
+	# util.print_performance(model, vocabulary)
+	# sse = util.output_sse(model, example_features)
+	# print(sse)
+	# print(sum(sse.values()))
+
 if __name__ == '__main__':
 	main()

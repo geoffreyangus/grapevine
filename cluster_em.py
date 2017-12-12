@@ -10,6 +10,7 @@ import json
 import util
 import pickle
 import time
+import os
 
 # data file assumed to be in .npy file format
 def load_data(freq_data):
@@ -30,15 +31,23 @@ class ClusterEM(object):
         self.means = None
         self.covariances = None
         self.weights = None
-
+        self.pickle_filename = util.OUTPUT_MODEL_EM
         self.assignments = None
 
     def run_model(self,data=util.FREQ_DATA):
         self.data_matrix = load_data(data).toarray()
+        if os.path.isfile(self.pickle_filename):
+            self.em = pickle.load(open(self.pickle_filename, 'rb'))
+            self.covariances = self.em.covariances_
+            self.means = self.em.means_
+            self.weights = self.em.weights_
+            self.assignments = self.create_assignments()
+            # self.assignments = np.load('em_assignments')
+            return
         #data_matrix = data_matrix[0:100,:]
         print('...Running EM Model...')
         start_time = time.time()
-        self.em = GaussianMixture(n_components=self.num_components,covariance_type='spherical').fit(data_matrix)
+        self.em = GaussianMixture(n_components=self.num_components,covariance_type='spherical').fit(self.data_matrix)
         try:
             self.covariances = self.em.covariances_
             self.means = self.em.means_
@@ -46,8 +55,9 @@ class ClusterEM(object):
             print('Clustering finished in: ', (time.time() - start_time))
         except:
             print('Data read in error')
-        output_file = 'util.OUTPUT_MODEL_EM' + '_' + util.NUM_CLUSTERS
-        pickle.dump(self.em,open(output_file,'wb'))
+        #output_file = 'util.OUTPUT_MODEL_EM' + '_' + string(util.NUM_CLUSTERS)
+        pickle.dump(self.em,open('em_model_12.sav','wb'))
+        self.assignments = self.create_assignments()
 
     def get_means(self):
         return self.means
@@ -59,16 +69,20 @@ class ClusterEM(object):
         return self.weights
 
     def predict_probs(self,data_point):
-        return self.em.predict_proba()
+        return self.em.predict_proba(data_point)
 
-    def create_assignments(self,data=util.FREQ_DATA):
+    def create_assignments(self):
         print('...Creating Assignments for EM Model ...')
         # assuming that the data matrix has already been loaded in the run_model()
         # step
-        self.assignments = np.zeros(self.data_matrix.shape)
-        for i in range(self.data_matrix.shape[0]):
-            self.assignments[i,:] = self.predict_probs(self.data_matrix[i,:])
-
+        self.assignments = self.predict_probs(self.data_matrix)
         # --------- Temporary Code -------
         # Storing out matrix also so that we do not need to re-run algorithm
-        sparse.save_npz('em_assignments.npz',self.assignments)
+        np.save('em_assignments', self.assignments)
+        return self.assignments
+
+    def get_assignments(self):
+        if os.path.isfile('em_assignments.npy'):
+            return np.load('em_assignments.npy')
+        else:
+            return self.create_assignments()
