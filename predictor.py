@@ -93,7 +93,7 @@ class Predictor(object):
 
         return mean + [np.random.normal(loc=mean[i], scale=covariance) for i in range(len(mean))]
 
-    def select_cluster_coordinates(self, history, cluster_index, covariance):
+    def select_cluster_coordinates(self, history, cluster_index, covariance, model):
         cluster_history = []
         history_wines = history.get_history()
         for wine in history_wines: 
@@ -101,7 +101,8 @@ class Predictor(object):
                 cluster_history.append(wine)
         random_history_wine = random.choice(cluster_history)
         random_history_wine_index = random_history_wine['true_index']
-        sample_mean = self.features[random_history_wine_index].toarray()[0]
+        # sample_mean = self.features[random_history_wine_index].toarray()[0]
+        sample_mean = model.em.means_[cluster_index]
         # print('Sampling from a multivariate normal...')
         benchmark_coordinates = sample_mean if covariance == 0 else self.multivariate_sample(sample_mean, covariance)
         # print('Selecting nearest wine from the following benchmark coordinate:')
@@ -163,14 +164,14 @@ class Predictor(object):
         for i in range(NUM_BETS):
             cluster_index = self.select_cluster(history) # one cluster index
             covariance = 0 if type(model) == KMeans else model.get_covariances()[cluster_index]
-            benchmark_coordinates = self.select_cluster_coordinates(history, cluster_index, covariance) # Selecting the wine options from which we will optimize to find the ideal wine
+            benchmark_coordinates = self.select_cluster_coordinates(history, cluster_index, covariance, model) # Selecting the wine options from which we will optimize to find the ideal wine
             search_space = self.get_search_space(model, history, cluster_index, benchmark_coordinates)
             recommendation = self.select_wine(benchmark_coordinates, search_space, examples, features, recommendations)
             recommendations.append(recommendation)
         for i in range(NUM_WILDCARDS):
             cluster_index = self.select_cluster(history) # one cluster index
             covariance = 0 if type(model) == KMeans else model.get_covariances()[cluster_index] * 20
-            benchmark_coordinates = self.select_cluster_coordinates(history, cluster_index, covariance) # Selecting the wine options from which we will optimize to find the ideal wine
+            benchmark_coordinates = self.select_cluster_coordinates(history, cluster_index, covariance, model) # Selecting the wine options from which we will optimize to find the ideal wine
             search_space = self.get_search_space(model, history, cluster_index, benchmark_coordinates)
             recommendation = self.select_wine(benchmark_coordinates, search_space, examples, features, recommendations)
             recommendations.append(recommendation)
