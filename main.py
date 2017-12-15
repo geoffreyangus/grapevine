@@ -1,5 +1,13 @@
+# coding: utf8
 '''
-main.py: main program that calls on cluster and predictor classes to recommend
+ ██████╗ ██████╗  █████╗ ██████╗ ███████╗██╗   ██╗██╗███╗   ██╗███████╗
+██╔════╝ ██╔══██╗██╔══██╗██╔══██╗██╔════╝██║   ██║██║████╗  ██║██╔════╝
+██║  ███╗██████╔╝███████║██████╔╝█████╗  ██║   ██║██║██╔██╗ ██║█████╗  
+██║   ██║██╔══██╗██╔══██║██╔═══╝ ██╔══╝  ╚██╗ ██╔╝██║██║╚██╗██║██╔══╝  
+╚██████╔╝██║  ██║██║  ██║██║     ███████╗ ╚████╔╝ ██║██║ ╚████║███████╗
+ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚══════╝  ╚═══╝  ╚═╝╚═╝  ╚═══╝╚══════╝
+ 
+ main.py: main program that calls on cluster and predictor classes to recommend
 a user wine.
 '''
 
@@ -29,17 +37,24 @@ def run_km():
 	cluster_model.cluster_data()
 	return cluster_model
 
+def should_extract_features():
+    review_matrix_exists = os.path.isfile(util.REVIEW_MATRIX)
+    raw_features_exist = os.path.isfile('raw_features.npz')
+    vocabulary_exists = os.path.isfile(util.REVIEW_VOCABULARY_FILE)
+    return not(review_matrix_exists and raw_features_exist and vocabulary_exists)
+
 def extract_data(file = util.JSON_FILE):
 	vocabulary = {}
-	if(not (os.path.isfile('word_freq.npz') and os.path.isfile('raw_features.npz') and os.path.isfile('./data/review_vocabulary.npy'))):
+	if(should_extract_features()):
 		print(10 * '.',' Extracting Features', 10 * '.')
 		features = FeatureExtractor()
 		features.extract(file)
 		vocabulary = features.get_review_vocabulary()
 	else:
-		vocabulary = np.load('./data/review_vocabulary.npy')[()]
-
-	vocabulary = dict((v,k) for k,v in vocabulary.items())
+		vocabulary = np.load(util.REVIEW_VOCABULARY_FILE)[()]
+		
+	print("Vocabulary shape: ", vocabulary.shape)
+	vocabulary = {v:k for k,v in enumerate(vocabulary)}
 	# print(10 * '.','Finished Extracting Features',10 * '.')
 	return vocabulary
 
@@ -48,24 +63,63 @@ def hasValidFlags():
 		return True 
 	return False
 
+def find_nearest_neighbors(k, cluster, centriod):
+	if len(cluster) < k:
+		return cluster
+		
+	k_nearest = [[] for i in range(k)]
+	k_distances = [float("inf") for i in range(k)]
+	for vector in cluster:
+		dist = np.linalg.norm(centriod-vector)
+		for i in range(k):
+			k_min_dist = k_distances[i]
+			if dist < k_min_dist:
+				k_nearest.insert(i, vector)
+				k_distances.insert(i, dist)
+				k_nearest.pop()
+				k_distances.pop()
+				break
+	return k_nearest
+
 def main():
 	if not ((len(sys.argv) == 3 and hasValidFlags()) or len(sys.argv) == 1):
 		print('usage python2.7 main.py [--history | -h] [history.json]')
 		return
 
 	vocabulary = extract_data(file=util.SAMPLE_REVIEWS_FILE)
-	model = run_em()
+	model = run_km()
 	assignments = model.get_assignments()
+	centriods = model.get_clusters()
 
 	examples = util.read_json(util.UNPROCESSED_FILTERED_REVIEWS_FILE)
-	cleaned_examples = util.read_json(util.FILTERED_REVIEWS_FILE)
-	example_features = util.load_features(util.FREQ_DATA)
-
+	cleaned_examples = util.read_json(util.FILTERED_REVIEWS_FILE)[:45000]
+	example_features = util.load_features(util.REVIEW_MATRIX)
+	
+	if util.USE_GLOVE_VECTORS:
+		clusters = [[] for i in range(len(centriods))]
+		for vector, assignment in enumerate(assignments):
+			clusters[assignment].append(vector)
+		
+		for index, cluster in enumerate(clusters):
+			print("There are ", len(cluster), " wines in cluster ", index,".")
+		
+		for index, cluster in enumerate(clusters):
+			print("== Cluster ", index, "====")
+			print("There are ", len(cluster), " wines in this cluster.")
+			k_nearest = find_nearest_neighbors(5, cluster, centriods[index])
+			for r in k_nearest:
+				print(examples[r]["review"])
+				print(" ")
+			print("=======================")
+		return	
+	 
+			
 	adjectives = ['dark', 'red', 'citrus', 'white', 'cherry', 'full', 'rich', 'fruity', 'plum', 'apple']
+	
 	if sys.argv[1] == '-h':
 		history = History(sys.argv[2])
 		flipped_vocabulary = dict((v,k) for k,v in vocabulary.items())
-		print('\nWelcome to Grapevine. Please fill out this short form in order to calibrate our recommender.')
+		print('\nWelcome to Grapevine! Please fill out this short form in order to calibrate our recommender.')
 		print('\nWhat are the top three adjectives you would use to describe your ideal wine? Please answer as if you are tasting a single wine.\n')
 		for i in range(len('adjectives')):
 			print(i, adjectives[i])

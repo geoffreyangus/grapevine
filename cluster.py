@@ -1,3 +1,4 @@
+# coding: utf8
 '''
 Clustering.py
 -----------------------
@@ -5,7 +6,7 @@ Input: Cluster Class receives a matrix of word frequency counts that have been
 normalized by TFIDF (term frequency–inverse document frequency). The algorithm
 uses the sklearn package for the K-means clustering algorithm.
 '''
-from sklearn.cluster import KMeans
+from sklearn.cluster import MiniBatchKMeans
 import numpy as np
 from scipy import sparse
 from scipy.sparse import csr_matrix
@@ -26,7 +27,7 @@ and can return the cluster assignment for a queuery point
 '''
 
 class Cluster(object):
-    def __init__(self, freq_data=util.FREQ_DATA, features_data=util.FEAT_DATA, num_clusters=util.NUM_CLUSTERS):
+    def __init__(self, freq_data=util.REVIEW_MATRIX, features_data=util.FEAT_DATA, num_clusters=util.NUM_CLUSTERS):
         self.num_clusters = num_clusters
         print('...Initializing Cluster...')
         compressed_freq = util.load_features(freq_data)
@@ -42,20 +43,24 @@ class Cluster(object):
     # Freq_Matrix is a matrix containing the normalized frequencies of the
     # words in the wine reviews; each row represents one wine review
     def cluster_data(self):
+        print('Attemping cluster...')
         if os.path.isfile(self.pickle_filename):
+            print('Found cluster in cache!')
             self.kmeans = pickle.load(open(self.pickle_filename, 'rb'))
             self.assignments = self.kmeans.labels_
             self.centroids = self.kmeans.cluster_centers_
             return
         try:
-            print('...Clustering...')
-            start_time = time.time()
-            self.kmeans = KMeans(n_clusters = util.NUM_CLUSTERS).fit(self.freq_matrix)
-            self.assignments = self.kmeans.labels_
-            self.centroids = self.kmeans.cluster_centers_
-            print('Clustering finished in: ', (time.time() - start_time))
+	        print('...Clustering...')
+	        review_matrix = self.freq_matrix
+	        print('Review Matrix Shape: ', self.freq_matrix.shape)
+	        start_time = time.time()
+	        self.kmeans = MiniBatchKMeans(n_clusters = util.NUM_CLUSTERS, verbose=1).fit(self.freq_matrix)
+	        self.assignments = self.kmeans.labels_
+	        self.centroids = self.kmeans.cluster_centers_
+	        print('Clustering finished in: ', (time.time() - start_time))
         except:
-            print ("Data read-in error!")
+        	print ("Data clustering error!")
         pickle.dump(self.kmeans,open(self.pickle_filename,'wb'))
 
     # labels represents index of the cluster that each sample belongs to

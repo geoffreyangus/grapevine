@@ -6,11 +6,15 @@ import hashlib
 import numpy as np
 
 CORPUS_FILE = 'data/word_corpus.txt'
+USE_GLOVE_VECTORS = False
+REVIEW_MATRIX = 'review_matrix.npz'
+GLOVE_PRETRAINED_VECTORS = 'glove_vectors_50.txt'
+GLOVE_REVIEW_CORPUS = './data/filtered_review_corpus.txt'
 UNPROCESSED_FILTERED_REVIEWS_FILE = './data/unprocessed_filtered_reviews.json'
 FILTERED_REVIEWS_FILE = './data/filtered_reviews.json'
-REVIEW_VOCABULARY_FILE = './data/review_vocabulary'
+REVIEW_VOCABULARY_FILE = './data/review_vocabulary.npy'
 FILTERED_FEAT_DICT_FILE = './data/filtered_feat_dict.json'
-NUM_CLUSTERS = 12 # number of clusters
+NUM_CLUSTERS = 34 # number of clusters
 FREQ_DATA = 'word_freq.npz' # file that contains the matrix
 FEAT_DATA = 'raw_features.npz'
 OUTPUT_MODEL = 'k_means_model.sav'

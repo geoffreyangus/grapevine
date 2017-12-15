@@ -17,10 +17,11 @@ from sklearn.feature_extraction import DictVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 import os
 import util
+from glove_vectors import GloveVectors
 
 class FeatureExtractor(object):
     '''
-    Json List, Reviews, Word_Freq, Data_Features
+    Json List, Reviews, Word_Freq, Glove Vec, Data_Features
     Models: v (Dict Vetorizer), w (TfidfVectorizer)
     '''
     def __init__(self):
@@ -28,6 +29,7 @@ class FeatureExtractor(object):
         self.feat_dic = []
         self.v = DictVectorizer(sparse=True)
         self.w = TfidfVectorizer(input='content')
+        self.vocabulary = {}
 
     def filter_reviews(self, json_list):
         self.json_list = util.read_json(json_list)
@@ -65,15 +67,27 @@ class FeatureExtractor(object):
 
     def process_reviews(self):
         print('...Parsing Data...')
-        self.word_freq = csr_matrix(self.w.fit_transform(self.reviews).toarray())
+        self.review_matrix = self.generate_review_matrix()
         self.data_features = csr_matrix(self.v.fit_transform(self.feat_dic).toarray())
-        print('size word freq', self.word_freq.shape)
-        print('data feats freq', self.data_features.shape)
+        print('review matrix size', self.review_matrix.shape)
+        print('data feats size', self.data_features.shape)
 
     def save_data(self):
         print('...Saving Data...')
         self.save_vocabulary()
         self.save_matrix()
+    
+    def generate_review_matrix(self):
+        if(util.USE_GLOVE_VECTORS):
+            # glove vector features 
+            glove_vectors = GloveVectors()
+            self.vocabulary, review_matrix = glove_vectors.get_review_matrix(self.reviews)
+            return review_matrix
+        else:
+            # tf-idf features
+            review_matrix = csr_matrix(self.w.fit_transform(self.reviews).toarray())
+            self.vocabulary = self.w.vocabulary_
+            return review_matrix
 
     def extract(self, json_file):
         if not (os.path.isfile(util.FILTERED_REVIEWS_FILE) and os.path.isfile(util.FILTERED_FEAT_DICT_FILE)):
@@ -87,6 +101,11 @@ class FeatureExtractor(object):
         self.save_data()
 
     def save_filtered_reviews(self):
+        # Generate a specific filtered review corpus (for training GLoVE vectors)
+        with open(util.GLOVE_REVIEW_CORPUS, 'w+') as f:
+            f.write(" ".join(self.reviews).encode('utf-8').strip())
+        
+        # Generate general JSON filtered review data
         with open(util.FILTERED_REVIEWS_FILE, 'w+') as f:
             json.dump(self.reviews, f, indent=4)
         with open(util.FILTERED_FEAT_DICT_FILE, 'w+') as f:
@@ -95,19 +114,20 @@ class FeatureExtractor(object):
             json.dump(self.json_list, f, indent=4)
 
     def save_vocabulary(self):
-        np.save(util.REVIEW_VOCABULARY_FILE, self.w.vocabulary_)
+        if not util.USE_GLOVE_VECTORS:
+            np.save(util.REVIEW_VOCABULARY_FILE, self.vocabulary)
 
     def get_review_vocabulary(self):
         result = {}
         if os.path.isfile(util.REVIEW_VOCABULARY_FILE):
-            result = np.load(util.REVIEW_VOCABULARY_FILE + '.npy')
+            result = np.load(util.REVIEW_VOCABULARY_FILE)
         else:
-            result = self.w.vocabulary_
+            result = self.vocabulary
         return result
 
     def save_matrix(self):
         sparse.save_npz('raw_features.npz',self.data_features)
-        sparse.save_npz('word_freq.npz',self.word_freq)
+        sparse.save_npz(util.REVIEW_MATRIX, self.review_matrix)
         return
 
     def get_feature_names(self):

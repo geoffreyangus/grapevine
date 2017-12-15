@@ -34,7 +34,7 @@ class ClusterEM(object):
         self.pickle_filename = util.OUTPUT_MODEL_EM
         self.assignments = None
 
-    def run_model(self,data=util.FREQ_DATA):
+    def run_model(self,data=util.REVIEW_MATRIX):
         self.data_matrix = load_data(data).toarray()
         if os.path.isfile(self.pickle_filename):
             self.em = pickle.load(open(self.pickle_filename, 'rb'))
