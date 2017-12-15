@@ -42,14 +42,21 @@ def read_json(json_file):
 def print_performance_em(model,vocabulary):
 	max_words = 10
 	means = model.means_
+
+	wordsToCluster = collections.defaultdict(list)
 	for i in range(means.shape[0]):
 		mean = means[i,:]
 		max_indices = np.argsort(mean)[-max_words:]
 		print('Top words of cluster', i)
-		tfidfIndices = [(means[i][j], j) for j in range(means[i].shape[0])] # list of (score, index in centroid vector)
-		tfidfIndices = sorted(tfidfIndices, key=lambda x: x[0], reverse=True)
+		# tfidfIndices = [(means[i][j], j) for j in range(means[i].shape[0])] # list of (score, index in centroid vector)
+		# tfidfIndices = sorted(tfidfIndices, key=lambda x: x[0], reverse=True)
 		for j in range(max_words):
-			print('--', vocabulary[max_indices[-j]]) #, tfidfIndices[j][0])
+			topWord = vocabulary[max_indices[-j]]
+			print('--', topWord) #, tfidfIndices[j][0])
+			wordsToCluster[topWord].append(i)
+
+	with open('top_em_words.json', 'w') as f:
+		json.dump(wordsToCluster, f, indent=4)
 
 def print_performance_km(model, vocabulary):
 	centroids = model.get_clusters()

@@ -50,7 +50,7 @@ def hasValidFlags():
 
 def main():
 	if not ((len(sys.argv) == 3 and hasValidFlags()) or len(sys.argv) == 1):
-		print('usage python2.7 main.py [--history | -h] [history.json]')
+		print('usage: python main.py [--history | -h] [history.json]')
 		return
 
 	vocabulary = extract_data(file=util.SAMPLE_REVIEWS_FILE)
@@ -62,25 +62,6 @@ def main():
 	example_features = util.load_features(util.FREQ_DATA)
 
 	adjectives = ['dark', 'red', 'citrus', 'white', 'cherry', 'full', 'rich', 'fruity', 'plum', 'apple']
-	if sys.argv[1] == '-h':
-		history = History(sys.argv[2])
-		flipped_vocabulary = dict((v,k) for k,v in vocabulary.items())
-		print('\nWelcome to Grapevine. Please fill out this short form in order to calibrate our recommender.')
-		print('\nWhat are the top three adjectives you would use to describe your ideal wine? Please answer as if you are tasting a single wine.\n')
-		for i in range(len('adjectives')):
-			print(i, adjectives[i])
-		indices = [int(index_str) for index_str in input('\n').split(',')]
-		selected_wines = []
-		for index in indices:
-			word_scores = example_features[:, flipped_vocabulary[adjectives[index]]].toarray().reshape(1,-1)[0]
-			true_indices = np.argpartition(word_scores, -10)[-10:]
-			selected_wines += [int(true_indices[i]) for i in range(len(true_indices))]
-
-		new_history = []
-		for true_index in selected_wines:
-			new_history.append((true_index, list(assignments[true_index]), 1))
-		history.set_history(new_history)
-		history.save_state()
 	
 	# util.print_performance_em(model.em, vocabulary)
 
@@ -89,38 +70,37 @@ def main():
 
 	# default_wines = [(examples[i], i) for i in range(len(examples[:10]))]
 	if len(sys.argv) == 3:
-		# gv_view.display_greeting()
-		# history = History(sys.argv[2])
-		# if history.length() == 0:
-		# 	gv_view.display_no_history_message(default_wines)
-		# 	indices = input('').split(',')
-		# 	for index in indices:
-		# 		index = int(index)
-		# 		if index in range(1, len(default_wines) + 1):
-		# 			true_index = default_wines[index - 1][1]
-		# 			history.add_wine(true_index, list(assignments[true_index]), 1)
-		# 		else:
-		# 			print('invalid index')
+		gv_view.display_greeting()
+		history = History(sys.argv[2])
+		if history.length() == 0:
+			gv_view.display_no_history_message(default_wines)
+			indices = input('').split(',')
+			for index in indices:
+				index = int(index)
+				if index in range(1, len(default_wines) + 1):
+					true_index = default_wines[index - 1][1]
+					history.add_wine(true_index, list(assignments[true_index]), 1)
+				else:
+					print('invalid index')
 
-		# else:
-		# 	history_max = 0
-		# 	new_history = []
-		# 	for i in range(len(assignments)):
-		# 		true_index = i
-		# 		assignment = assignments[i]
-		# 		if np.argmax(assignment) == 8:
-		# 			history_max += 1
-		# 			new_history.append((true_index, list(assignment), 1))
-		# 			if history_max == 20:
-		# 				break
-		# 	history.set_history(new_history)
-		# history.save_state()
-		# return
+		else:
+			history_max = 0
+			new_history = []
+			for i in range(len(assignments)):
+				true_index = i
+				assignment = assignments[i]
+				if np.argmax(assignment) == 8:
+					history_max += 1
+					new_history.append((true_index, list(assignment), 1))
+					if history_max == 20:
+						break
+			history.set_history(new_history)
+		history.save_state()
 		predictor = Predictor(examples, example_features)
 		recommendations = predictor.predict(model, history, examples, example_features)
-		# print('-------HISTORY-------')
-		# for wine in history.get_history():
-		# 	print('--',cleaned_examples[wine['true_index']])
+		print('-------HISTORY-------')
+		for wine in history.get_history():
+			print('--',cleaned_examples[wine['true_index']])
 		print('---RECOMMENDATIONS---\n')
 		for true_index in recommendations:
 			if true_index == recommendations[-1]:

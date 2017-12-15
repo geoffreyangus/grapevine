@@ -28,6 +28,7 @@ class FeatureExtractor(object):
         self.feat_dic = []
         self.v = DictVectorizer(sparse=True)
         self.w = TfidfVectorizer(input='content')
+        self.clean_json_list = []
 
     def filter_reviews(self, json_list):
         self.json_list = util.read_json(json_list)
@@ -41,6 +42,7 @@ class FeatureExtractor(object):
             except:
                 self.json_list.remove(json)
                 continue
+            self.clean_json_list.append(json)
             # Adding only the relevant features that we want to
             # analyze to the feature dictionary (feat_dic)
             json_feat = {}
@@ -76,6 +78,8 @@ class FeatureExtractor(object):
         self.save_matrix()
 
     def extract(self, json_file):
+        self.filter_reviews(json_file)
+        return
         if not (os.path.isfile(util.FILTERED_REVIEWS_FILE) and os.path.isfile(util.FILTERED_FEAT_DICT_FILE)):
             self.filter_reviews(json_file)
         else:
@@ -92,7 +96,7 @@ class FeatureExtractor(object):
         with open(util.FILTERED_FEAT_DICT_FILE, 'w+') as f:
             json.dump(self.feat_dic, f, indent=4)
         with open(util.UNPROCESSED_FILTERED_REVIEWS_FILE, 'w+') as f:
-            json.dump(self.json_list, f, indent=4)
+            json.dump(self.clean_json_list, f, indent=4)
 
     def save_vocabulary(self):
         np.save(util.REVIEW_VOCABULARY_FILE, self.w.vocabulary_)

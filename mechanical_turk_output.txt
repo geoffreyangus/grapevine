@@ -1,0 +1,790 @@
+Choosing from cluster: [11]
+---RECOMMENDATIONS---
+
+{
+    "name": "C\u00f4tes du Roussillon-Villages Clos du Romarin 2012",
+    "review": "A juicy red, with creamy flavors of boysenberry and blackberry. Cocoa powder and graphite notes fill the muscular finish. Drink now through 2018. 500 cases made.",
+    "price:": "$17",
+    "score": "88"
+} 
+
+{
+    "name": "Brut Willamette Valley 2009",
+    "review": "Bright and complex, with juicy acidity supporting the pear, tobacco and lime flavors, singing together in harmony on the lively finish. Drink now. 10,800 cases made.",
+    "price:": "$27",
+    "score": "90"
+} 
+
+{
+    "name": "Malbec Vistalba Baldomir Terroirs Serie 2013",
+    "review": "Plush and rich, with concentrated flavors of dark plum and cherry tart matched to powerful Asian spice accents. Dark chocolate and mocha notes show on the firmly tannic finish. Well-structured. Drink now through 2020. 500 cases made.",
+    "price:": "$54",
+    "score": "90"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Riesling Smaragd Trocken Wachau D\u00fcrnsteiner Ried Sch\u00fctt 2006",
+    "review": "A big, rich Riesling, with tropical fruit flavors of mango and guava, along with luscious ripe peach and apple. The finish is filled with spice and smoke. This is really humming. Drink now through 2018. 25 cases imported.",
+    "price:": "$79",
+    "score": "94"
+} 
+
+Choosing from cluster: [11]
+---RECOMMENDATIONS---
+
+{
+    "name": "C\u00f4tes du Roussillon-Villages Clos du Romarin 2012",
+    "review": "A juicy red, with creamy flavors of boysenberry and blackberry. Cocoa powder and graphite notes fill the muscular finish. Drink now through 2018. 500 cases made.",
+    "price:": "$17",
+    "score": "88"
+} 
+
+{
+    "name": "Brut Willamette Valley 2009",
+    "review": "Bright and complex, with juicy acidity supporting the pear, tobacco and lime flavors, singing together in harmony on the lively finish. Drink now. 10,800 cases made.",
+    "price:": "$27",
+    "score": "90"
+} 
+
+{
+    "name": "Malbec Vistalba Baldomir Terroirs Serie 2013",
+    "review": "Plush and rich, with concentrated flavors of dark plum and cherry tart matched to powerful Asian spice accents. Dark chocolate and mocha notes show on the firmly tannic finish. Well-structured. Drink now through 2020. 500 cases made.",
+    "price:": "$54",
+    "score": "90"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Chablis Mont\u00e9e de Tonnerre 1993",
+    "review": "Tough, hard and somewhat lean for us, offering loads of lemon, green apple and grapefruit flavors and a chalky finish.",
+    "price:": "$23",
+    "score": "80"
+} 
+
+Choosing from cluster: [0, 7]
+---RECOMMENDATIONS---
+
+{
+    "name": "White Port Dry NV",
+    "review": "Shows a minerally essence to the lively flavors of buttercream, salted almond and dried pear. The off-dry finish is long, lush and well-spiced. Drink now through 2019. 145 cases imported.",
+    "price:": "$25",
+    "score": "89"
+} 
+
+{
+    "name": "Chassagne-Montrachet Les Chenevottes 1989",
+    "review": "Rich, rustic and almost decadent, with rustic aromas of earth and fruit. Full-bodied, with an oily mouth-feel and rich flavors. Drink now.",
+    "price:": "$66",
+    "score": "89"
+} 
+
+{
+    "name": "Gr\u00fcner Veltliner Qualit\u00e4tswein Trocken Nieder\u00f6sterreich Rotenp\u00fcllen 2015",
+    "review": "Green lentil, peach and apple flavors dominate this crisp, straightforward style. Notes of dried green herbs emerge on the finish. Drink now. 1,000 cases made.",
+    "price:": "$20",
+    "score": "85"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Chablis Mont\u00e9e de Tonnerre 1993",
+    "review": "Tough, hard and somewhat lean for us, offering loads of lemon, green apple and grapefruit flavors and a chalky finish.",
+    "price:": "$23",
+    "score": "80"
+} 
+
+Choosing from cluster: [10, 11]
+---RECOMMENDATIONS---
+
+{
+    "name": "C\u00f4tes du Roussillon-Villages Clos du Romarin 2012",
+    "review": "A juicy red, with creamy flavors of boysenberry and blackberry. Cocoa powder and graphite notes fill the muscular finish. Drink now through 2018. 500 cases made.",
+    "price:": "$17",
+    "score": "88"
+} 
+
+{
+    "name": "Brut Willamette Valley 2009",
+    "review": "Bright and complex, with juicy acidity supporting the pear, tobacco and lime flavors, singing together in harmony on the lively finish. Drink now. 10,800 cases made.",
+    "price:": "$27",
+    "score": "90"
+} 
+
+{
+    "name": "Pinot Noir Willamette Valley 2006",
+    "review": "Polished, focused and distinctive for the rose petal and chamomile tea accents to the plump core of currant, cherry and spice flavors. The finish holds together easily. Drink now through 2014. 475 cases made.",
+    "price:": "$19",
+    "score": "89"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Merlot Galilee Reserve 2000",
+    "review": "Medium-bodied, with red plum and berry flavors, and bell pepper notes on the finish. Drink now.",
+    "price:": "$20",
+    "score": "84"
+} 
+
+Choosing from cluster: [10, 11]
+---RECOMMENDATIONS---
+
+{
+    "name": "Pinot Noir Willamette Valley 2006",
+    "review": "Polished, focused and distinctive for the rose petal and chamomile tea accents to the plump core of currant, cherry and spice flavors. The finish holds together easily. Drink now through 2014. 475 cases made.",
+    "price:": "$19",
+    "score": "89"
+} 
+
+{
+    "name": "C\u00f4tes du Roussillon-Villages Clos du Romarin 2012",
+    "review": "A juicy red, with creamy flavors of boysenberry and blackberry. Cocoa powder and graphite notes fill the muscular finish. Drink now through 2018. 500 cases made.",
+    "price:": "$17",
+    "score": "88"
+} 
+
+{
+    "name": "Merlot Galilee Reserve 2000",
+    "review": "Medium-bodied, with red plum and berry flavors, and bell pepper notes on the finish. Drink now.",
+    "price:": "$20",
+    "score": "84"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Reserve Red Columbia Valley 2014",
+    "review": "This red is sleek and refined, with elegant complexity and appealing notes of cherry, green pepper and spice that linger toward balanced tannins. Cabernet Sauvignon with Merlot, Cabernet Franc and Malbec. Drink now through 2024. 189 cases made.",
+    "price:": "$65",
+    "score": "92"
+} 
+
+Choosing from cluster: [11]
+---RECOMMENDATIONS---
+
+{
+    "name": "C\u00f4tes du Roussillon-Villages Clos du Romarin 2012",
+    "review": "A juicy red, with creamy flavors of boysenberry and blackberry. Cocoa powder and graphite notes fill the muscular finish. Drink now through 2018. 500 cases made.",
+    "price:": "$17",
+    "score": "88"
+} 
+
+{
+    "name": "Brut Willamette Valley 2009",
+    "review": "Bright and complex, with juicy acidity supporting the pear, tobacco and lime flavors, singing together in harmony on the lively finish. Drink now. 10,800 cases made.",
+    "price:": "$27",
+    "score": "90"
+} 
+
+{
+    "name": "Malbec Vistalba Baldomir Terroirs Serie 2013",
+    "review": "Plush and rich, with concentrated flavors of dark plum and cherry tart matched to powerful Asian spice accents. Dark chocolate and mocha notes show on the firmly tannic finish. Well-structured. Drink now through 2020. 500 cases made.",
+    "price:": "$54",
+    "score": "90"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "White Port Dry NV",
+    "review": "Shows a minerally essence to the lively flavors of buttercream, salted almond and dried pear. The off-dry finish is long, lush and well-spiced. Drink now through 2019. 145 cases imported.",
+    "price:": "$25",
+    "score": "89"
+} 
+
+Choosing from cluster: [11]
+---RECOMMENDATIONS---
+
+{
+    "name": "C\u00f4tes du Roussillon-Villages Clos du Romarin 2012",
+    "review": "A juicy red, with creamy flavors of boysenberry and blackberry. Cocoa powder and graphite notes fill the muscular finish. Drink now through 2018. 500 cases made.",
+    "price:": "$17",
+    "score": "88"
+} 
+
+{
+    "name": "Brut Willamette Valley 2009",
+    "review": "Bright and complex, with juicy acidity supporting the pear, tobacco and lime flavors, singing together in harmony on the lively finish. Drink now. 10,800 cases made.",
+    "price:": "$27",
+    "score": "90"
+} 
+
+{
+    "name": "Malbec Vistalba Baldomir Terroirs Serie 2013",
+    "review": "Plush and rich, with concentrated flavors of dark plum and cherry tart matched to powerful Asian spice accents. Dark chocolate and mocha notes show on the firmly tannic finish. Well-structured. Drink now through 2020. 500 cases made.",
+    "price:": "$54",
+    "score": "90"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "White Port Dry NV",
+    "review": "Shows a minerally essence to the lively flavors of buttercream, salted almond and dried pear. The off-dry finish is long, lush and well-spiced. Drink now through 2019. 145 cases imported.",
+    "price:": "$25",
+    "score": "89"
+} 
+
+Choosing from cluster: [0, 7]
+---RECOMMENDATIONS---
+
+{
+    "name": "White Port Dry NV",
+    "review": "Shows a minerally essence to the lively flavors of buttercream, salted almond and dried pear. The off-dry finish is long, lush and well-spiced. Drink now through 2019. 145 cases imported.",
+    "price:": "$25",
+    "score": "89"
+} 
+
+{
+    "name": "Gr\u00fcner Veltliner Qualit\u00e4tswein Trocken Nieder\u00f6sterreich Rotenp\u00fcllen 2015",
+    "review": "Green lentil, peach and apple flavors dominate this crisp, straightforward style. Notes of dried green herbs emerge on the finish. Drink now. 1,000 cases made.",
+    "price:": "$20",
+    "score": "85"
+} 
+
+{
+    "name": "Chassagne-Montrachet Les Chenevottes 1989",
+    "review": "Rich, rustic and almost decadent, with rustic aromas of earth and fruit. Full-bodied, with an oily mouth-feel and rich flavors. Drink now.",
+    "price:": "$66",
+    "score": "89"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Gew\u00fcrztraminer Alsace Grand Cru Steingrubler 2012",
+    "review": "Hints of smoke, honey and roasted nut provide a rich flavor base for this elegant white. Well-cut acidity forms a lively frame for the notes of green melon, ripe pear, paraffin and candied ginger. Drink now through 2020. 40 cases imported.",
+    "price:": "$36",
+    "score": "90"
+} 
+
+Choosing from cluster: [0, 7]
+---RECOMMENDATIONS---
+
+{
+    "name": "Gr\u00fcner Veltliner Qualit\u00e4tswein Trocken Nieder\u00f6sterreich Rotenp\u00fcllen 2015",
+    "review": "Green lentil, peach and apple flavors dominate this crisp, straightforward style. Notes of dried green herbs emerge on the finish. Drink now. 1,000 cases made.",
+    "price:": "$20",
+    "score": "85"
+} 
+
+{
+    "name": "Valpolicella Classico 2013",
+    "review": "A modest red in an austere style, with structured tannins and an herbal overtone to the raspberry, cherry, loamy earth and spice notes. Best from 2016 through 2019. 5,000 cases made.",
+    "price:": "$20",
+    "score": "86"
+} 
+
+{
+    "name": "White Port Dry NV",
+    "review": "Shows a minerally essence to the lively flavors of buttercream, salted almond and dried pear. The off-dry finish is long, lush and well-spiced. Drink now through 2019. 145 cases imported.",
+    "price:": "$25",
+    "score": "89"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Shiraz Stellenbosch 2003",
+    "review": "Lots of ripe boysenberry and raspberry fruit, along with judicious toast. Nice, racy profile through the fruit- and spice-filled finish.  Drink now through 2007. 1,000 cases made.",
+    "price:": "$29",
+    "score": "89"
+} 
+
+Choosing from cluster: [10, 11]
+---RECOMMENDATIONS---
+
+{
+    "name": "Pinot Noir Willamette Valley 2006",
+    "review": "Polished, focused and distinctive for the rose petal and chamomile tea accents to the plump core of currant, cherry and spice flavors. The finish holds together easily. Drink now through 2014. 475 cases made.",
+    "price:": "$19",
+    "score": "89"
+} 
+
+{
+    "name": "Merlot Galilee Reserve 2000",
+    "review": "Medium-bodied, with red plum and berry flavors, and bell pepper notes on the finish. Drink now.",
+    "price:": "$20",
+    "score": "84"
+} 
+
+{
+    "name": "Pinot Noir Sta. Rita Hills La Poes\u00eda de Jonata 2006",
+    "review": "Ripe and floral, displaying lively plum and raspberry flavors, with an orange peel edge that joins the vibrant acidity. Drink now through 2011. 83 cases made.",
+    "price:": "$85",
+    "score": "87"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Reserve Red Columbia Valley 2014",
+    "review": "This red is sleek and refined, with elegant complexity and appealing notes of cherry, green pepper and spice that linger toward balanced tannins. Cabernet Sauvignon with Merlot, Cabernet Franc and Malbec. Drink now through 2024. 189 cases made.",
+    "price:": "$65",
+    "score": "92"
+} 
+
+--------------------------------ITERATION 1--------------------------------
+full
+rich
+simple
+--------------------------------ITERATION 2--------------------------------
+crisp
+full
+simple
+--------------------------------ITERATION 3--------------------------------
+cherry
+full
+rich
+--------------------------------ITERATION 4--------------------------------
+lemon
+full
+light
+--------------------------------ITERATION 5--------------------------------
+full
+rich
+light
+--------------------------------ITERATION 6--------------------------------
+lemon
+light
+simple
+--------------------------------ITERATION 7--------------------------------
+lemon
+crisp
+simple
+--------------------------------ITERATION 8--------------------------------
+raspberry
+cherry
+rich
+--------------------------------ITERATION 9--------------------------------
+lemon
+crisp
+rich
+--------------------------------ITERATION 10--------------------------------
+lemon
+full
+light
+
+You have selected the following words:
+
+lemon
+full
+simple
+
+Loading recommendations...
+
+Choosing from cluster: [11]
+---RECOMMENDATIONS---
+
+{
+    "name": "C\u00f4tes du Roussillon-Villages Clos du Romarin 2012",
+    "review": "A juicy red, with creamy flavors of boysenberry and blackberry. Cocoa powder and graphite notes fill the muscular finish. Drink now through 2018. 500 cases made.",
+    "price:": "$17",
+    "score": "88"
+} 
+
+{
+    "name": "Brut Willamette Valley 2009",
+    "review": "Bright and complex, with juicy acidity supporting the pear, tobacco and lime flavors, singing together in harmony on the lively finish. Drink now. 10,800 cases made.",
+    "price:": "$27",
+    "score": "90"
+} 
+
+{
+    "name": "Malbec Vistalba Baldomir Terroirs Serie 2013",
+    "review": "Plush and rich, with concentrated flavors of dark plum and cherry tart matched to powerful Asian spice accents. Dark chocolate and mocha notes show on the firmly tannic finish. Well-structured. Drink now through 2020. 500 cases made.",
+    "price:": "$54",
+    "score": "90"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Riesling Smaragd Trocken Wachau D\u00fcrnsteiner Ried Sch\u00fctt 2006",
+    "review": "A big, rich Riesling, with tropical fruit flavors of mango and guava, along with luscious ripe peach and apple. The finish is filled with spice and smoke. This is really humming. Drink now through 2018. 25 cases imported.",
+    "price:": "$79",
+    "score": "94"
+} 
+
+
+You have selected the following words:
+
+crisp
+full
+light
+
+Loading recommendations...
+
+Choosing from cluster: [10, 11]
+---RECOMMENDATIONS---
+
+{
+    "name": "C\u00f4tes du Roussillon-Villages Clos du Romarin 2012",
+    "review": "A juicy red, with creamy flavors of boysenberry and blackberry. Cocoa powder and graphite notes fill the muscular finish. Drink now through 2018. 500 cases made.",
+    "price:": "$17",
+    "score": "88"
+} 
+
+{
+    "name": "Brut Willamette Valley 2009",
+    "review": "Bright and complex, with juicy acidity supporting the pear, tobacco and lime flavors, singing together in harmony on the lively finish. Drink now. 10,800 cases made.",
+    "price:": "$27",
+    "score": "90"
+} 
+
+{
+    "name": "Malbec Vistalba Baldomir Terroirs Serie 2013",
+    "review": "Plush and rich, with concentrated flavors of dark plum and cherry tart matched to powerful Asian spice accents. Dark chocolate and mocha notes show on the firmly tannic finish. Well-structured. Drink now through 2020. 500 cases made.",
+    "price:": "$54",
+    "score": "90"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Syrah Sonoma County 2002",
+    "review": "Tart, with good concentration to raspberry extract, spicy raisin and balsamic flavors. Drink now through 2007. 100 cases made.",
+    "price:": "$35",
+    "score": "82"
+} 
+
+
+You have selected the following words:
+
+licorice
+cherry
+rich
+
+Loading recommendations...
+
+Choosing from cluster: [0, 7]
+---RECOMMENDATIONS---
+
+{
+    "name": "White Port Dry NV",
+    "review": "Shows a minerally essence to the lively flavors of buttercream, salted almond and dried pear. The off-dry finish is long, lush and well-spiced. Drink now through 2019. 145 cases imported.",
+    "price:": "$25",
+    "score": "89"
+} 
+
+{
+    "name": "Chassagne-Montrachet Les Chenevottes 1989",
+    "review": "Rich, rustic and almost decadent, with rustic aromas of earth and fruit. Full-bodied, with an oily mouth-feel and rich flavors. Drink now.",
+    "price:": "$66",
+    "score": "89"
+} 
+
+{
+    "name": "Gr\u00fcner Veltliner Qualit\u00e4tswein Trocken Nieder\u00f6sterreich Rotenp\u00fcllen 2015",
+    "review": "Green lentil, peach and apple flavors dominate this crisp, straightforward style. Notes of dried green herbs emerge on the finish. Drink now. 1,000 cases made.",
+    "price:": "$20",
+    "score": "85"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Pinot Noir Willamette Valley 2006",
+    "review": "Polished, focused and distinctive for the rose petal and chamomile tea accents to the plump core of currant, cherry and spice flavors. The finish holds together easily. Drink now through 2014. 475 cases made.",
+    "price:": "$19",
+    "score": "89"
+} 
+
+
+You have selected the following words:
+
+licorice
+cherry
+full
+
+Loading recommendations...
+
+Choosing from cluster: [0, 5]
+---RECOMMENDATIONS---
+
+{
+    "name": "Chablis Mont\u00e9e de Tonnerre 1993",
+    "review": "Tough, hard and somewhat lean for us, offering loads of lemon, green apple and grapefruit flavors and a chalky finish.",
+    "price:": "$23",
+    "score": "80"
+} 
+
+{
+    "name": "Barbera d'Alba Superiore 2013",
+    "review": "This red is fruity and juicy, with strawberry, raspberry and cherry flavors. Firm and mouthwatering on the minerally finish, which lingers pleasantly. Drink now through 2020. 900 cases made.",
+    "price:": "$42",
+    "score": "90"
+} 
+
+{
+    "name": "Haut-M\u00e9doc 2002",
+    "review": "Clean and spicy plum and mineral aromas and flavors. Light- to medium-bodied, with a fresh palate. Slightly weedy. Drink now. 10,800 cases made.",
+    "price:": "$20",
+    "score": "81"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Gew\u00fcrztraminer Alsace Grand Cru Steingrubler 2012",
+    "review": "Hints of smoke, honey and roasted nut provide a rich flavor base for this elegant white. Well-cut acidity forms a lively frame for the notes of green melon, ripe pear, paraffin and candied ginger. Drink now through 2020. 40 cases imported.",
+    "price:": "$36",
+    "score": "90"
+} 
+
+
+You have selected the following words:
+
+licorice
+cherry
+full
+
+Loading recommendations...
+
+Choosing from cluster: [0, 5]
+---RECOMMENDATIONS---
+
+{
+    "name": "Chablis Mont\u00e9e de Tonnerre 1993",
+    "review": "Tough, hard and somewhat lean for us, offering loads of lemon, green apple and grapefruit flavors and a chalky finish.",
+    "price:": "$23",
+    "score": "80"
+} 
+
+{
+    "name": "Barbera d'Alba Superiore 2013",
+    "review": "This red is fruity and juicy, with strawberry, raspberry and cherry flavors. Firm and mouthwatering on the minerally finish, which lingers pleasantly. Drink now through 2020. 900 cases made.",
+    "price:": "$42",
+    "score": "90"
+} 
+
+{
+    "name": "Gr\u00fcner Veltliner Qualit\u00e4tswein Trocken Nieder\u00f6sterreich Rotenp\u00fcllen 2015",
+    "review": "Green lentil, peach and apple flavors dominate this crisp, straightforward style. Notes of dried green herbs emerge on the finish. Drink now. 1,000 cases made.",
+    "price:": "$20",
+    "score": "85"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Valpolicella Classico 2013",
+    "review": "A modest red in an austere style, with structured tannins and an herbal overtone to the raspberry, cherry, loamy earth and spice notes. Best from 2016 through 2019. 5,000 cases made.",
+    "price:": "$20",
+    "score": "86"
+} 
+
+
+You have selected the following words:
+
+raspberry
+cherry
+rich
+
+Loading recommendations...
+
+Choosing from cluster: [0, 7]
+---RECOMMENDATIONS---
+
+{
+    "name": "Gr\u00fcner Veltliner Qualit\u00e4tswein Trocken Nieder\u00f6sterreich Rotenp\u00fcllen 2015",
+    "review": "Green lentil, peach and apple flavors dominate this crisp, straightforward style. Notes of dried green herbs emerge on the finish. Drink now. 1,000 cases made.",
+    "price:": "$20",
+    "score": "85"
+} 
+
+{
+    "name": "Valpolicella Classico 2013",
+    "review": "A modest red in an austere style, with structured tannins and an herbal overtone to the raspberry, cherry, loamy earth and spice notes. Best from 2016 through 2019. 5,000 cases made.",
+    "price:": "$20",
+    "score": "86"
+} 
+
+{
+    "name": "Shiraz Stellenbosch 2003",
+    "review": "Lots of ripe boysenberry and raspberry fruit, along with judicious toast. Nice, racy profile through the fruit- and spice-filled finish.  Drink now through 2007. 1,000 cases made.",
+    "price:": "$29",
+    "score": "89"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Pinot Noir Willamette Valley 2006",
+    "review": "Polished, focused and distinctive for the rose petal and chamomile tea accents to the plump core of currant, cherry and spice flavors. The finish holds together easily. Drink now through 2014. 475 cases made.",
+    "price:": "$19",
+    "score": "89"
+} 
+
+
+You have selected the following words:
+
+crisp
+full
+simple
+
+Loading recommendations...
+
+Choosing from cluster: [11]
+---RECOMMENDATIONS---
+
+{
+    "name": "C\u00f4tes du Roussillon-Villages Clos du Romarin 2012",
+    "review": "A juicy red, with creamy flavors of boysenberry and blackberry. Cocoa powder and graphite notes fill the muscular finish. Drink now through 2018. 500 cases made.",
+    "price:": "$17",
+    "score": "88"
+} 
+
+{
+    "name": "Brut Willamette Valley 2009",
+    "review": "Bright and complex, with juicy acidity supporting the pear, tobacco and lime flavors, singing together in harmony on the lively finish. Drink now. 10,800 cases made.",
+    "price:": "$27",
+    "score": "90"
+} 
+
+{
+    "name": "Malbec Vistalba Baldomir Terroirs Serie 2013",
+    "review": "Plush and rich, with concentrated flavors of dark plum and cherry tart matched to powerful Asian spice accents. Dark chocolate and mocha notes show on the firmly tannic finish. Well-structured. Drink now through 2020. 500 cases made.",
+    "price:": "$54",
+    "score": "90"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Riesling Yakima Valley Ice Wine 2001",
+    "review": "Deeply rich and concentrated, just this side of syrupy, weaving all sorts of apricot, nectarine, pineapple and citrus flavors on a polished frame. Delicious now, but could develop more depth with cellaring. Contains 23 percent Gew\u00fcrztraminer. Drink now through 2010. 1,582 cases made.",
+    "price:": "$21/375ml",
+    "score": "92"
+} 
+
+
+You have selected the following words:
+
+crisp
+rich
+light
+
+Loading recommendations...
+
+Choosing from cluster: [10, 11]
+---RECOMMENDATIONS---
+
+{
+    "name": "C\u00f4tes du Roussillon-Villages Clos du Romarin 2012",
+    "review": "A juicy red, with creamy flavors of boysenberry and blackberry. Cocoa powder and graphite notes fill the muscular finish. Drink now through 2018. 500 cases made.",
+    "price:": "$17",
+    "score": "88"
+} 
+
+{
+    "name": "Brut Willamette Valley 2009",
+    "review": "Bright and complex, with juicy acidity supporting the pear, tobacco and lime flavors, singing together in harmony on the lively finish. Drink now. 10,800 cases made.",
+    "price:": "$27",
+    "score": "90"
+} 
+
+{
+    "name": "Pinot Noir Willamette Valley 2006",
+    "review": "Polished, focused and distinctive for the rose petal and chamomile tea accents to the plump core of currant, cherry and spice flavors. The finish holds together easily. Drink now through 2014. 475 cases made.",
+    "price:": "$19",
+    "score": "89"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "White Port Dry NV",
+    "review": "Shows a minerally essence to the lively flavors of buttercream, salted almond and dried pear. The off-dry finish is long, lush and well-spiced. Drink now through 2019. 145 cases imported.",
+    "price:": "$25",
+    "score": "89"
+} 
+
+
+You have selected the following words:
+
+licorice
+raspberry
+rich
+
+Loading recommendations...
+
+Choosing from cluster: [0, 7]
+---RECOMMENDATIONS---
+
+{
+    "name": "Gr\u00fcner Veltliner Qualit\u00e4tswein Trocken Nieder\u00f6sterreich Rotenp\u00fcllen 2015",
+    "review": "Green lentil, peach and apple flavors dominate this crisp, straightforward style. Notes of dried green herbs emerge on the finish. Drink now. 1,000 cases made.",
+    "price:": "$20",
+    "score": "85"
+} 
+
+{
+    "name": "White Port Dry NV",
+    "review": "Shows a minerally essence to the lively flavors of buttercream, salted almond and dried pear. The off-dry finish is long, lush and well-spiced. Drink now through 2019. 145 cases imported.",
+    "price:": "$25",
+    "score": "89"
+} 
+
+{
+    "name": "Valpolicella Classico 2013",
+    "review": "A modest red in an austere style, with structured tannins and an herbal overtone to the raspberry, cherry, loamy earth and spice notes. Best from 2016 through 2019. 5,000 cases made.",
+    "price:": "$20",
+    "score": "86"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Riesling Smaragd Trocken Wachau D\u00fcrnsteiner Ried Sch\u00fctt 2006",
+    "review": "A big, rich Riesling, with tropical fruit flavors of mango and guava, along with luscious ripe peach and apple. The finish is filled with spice and smoke. This is really humming. Drink now through 2018. 25 cases imported.",
+    "price:": "$79",
+    "score": "94"
+} 
+
+
+You have selected the following words:
+
+cherry
+full
+blackberry
+
+Loading recommendations...
+
+Choosing from cluster: [0, 3, 6]
+---RECOMMENDATIONS---
+
+{
+    "name": "Gr\u00fcner Veltliner Qualit\u00e4tswein Trocken Nieder\u00f6sterreich Rotenp\u00fcllen 2015",
+    "review": "Green lentil, peach and apple flavors dominate this crisp, straightforward style. Notes of dried green herbs emerge on the finish. Drink now. 1,000 cases made.",
+    "price:": "$20",
+    "score": "85"
+} 
+
+{
+    "name": "Reserve Red Columbia Valley 2014",
+    "review": "This red is sleek and refined, with elegant complexity and appealing notes of cherry, green pepper and spice that linger toward balanced tannins. Cabernet Sauvignon with Merlot, Cabernet Franc and Malbec. Drink now through 2024. 189 cases made.",
+    "price:": "$65",
+    "score": "92"
+} 
+
+{
+    "name": "Chianti Classico Villa Antinori Riserva 2013",
+    "review": "Fresh and vibrant, this red displays cherry, strawberry, tobacco, spice and mineral flavors. The firm structure lends plenty of support and the finish evokes tobacco, earth and underbrush notes. Best from 2018 through 2023. 7,125 cases imported.",
+    "price:": "$35",
+    "score": "90"
+} 
+
+------WILDCARD-------
+
+{
+    "name": "Dolcetto d'Alba Barturot 1997",
+    "review": "This complex, dark-colored Dolcetto is packed with black fruit character, spice and smoke, but above all a ripe-tasting texture, round tannins and a fresh, lively, seductive finish that beckons for another sip. Great quality as expected from a recognized star, Giuseppe Caviola. Drink now through 2001.",
+    "price:": "$18",
+    "score": "90"
+} 
+

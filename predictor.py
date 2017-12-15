@@ -38,6 +38,7 @@ our analysis of the ideal wine selection.s
 
 THRESHOLD = 0.2
 LAMBDA = 100
+ETA = 0.0000001
 NUM_BETS = 3
 NUM_WILDCARDS = 1
 
@@ -72,7 +73,7 @@ class Predictor(object):
         probs = [num_wines[k] * (pos[k] / pos_total) * (1-neg[k] / neg_total) for k in range(num_clusters)]
         probs = probs / sum(probs)
         choice = np.random.choice(range(num_clusters), p=probs)
-        print('Selected cluster:',choice)
+        # print('Selected cluster:',choice)
         return choice
 
     # Source: https://philbull.wordpress.com/2012/09/27/drawing-random-numbers-from-a-multivariate-gaussian/
@@ -114,14 +115,14 @@ class Predictor(object):
         if(type(model) == ClusterEM):
             em_model = model.em
             cluster_scores = em_model.predict_proba(benchmark_coordinates.reshape(1, -1))[0]
-            print(cluster_scores)
+            # print(cluster_scores)
             cluster_scores = sorted([(cluster_scores[j], j) for j in range(len(cluster_scores))], key=lambda x: x[0], reverse=True)
             em_assignments = np.load('em_assignments.npy')
             target_clusters = set()
             target_clusters.add(cluster_scores[0][1])
             if(cluster_scores[0][0] - cluster_scores[1][0] < THRESHOLD):
                 target_clusters.add(cluster_scores[1][1])
-            print('Selecting from the following clusters...', target_clusters)
+            # print('Selecting from the following clusters...', target_clusters)
             for i in range(len(em_assignments)):
                 max_assignment = np.argmax(em_assignments[i,:])
                 if max_assignment in target_clusters: 
@@ -150,30 +151,52 @@ class Predictor(object):
         for example in examples:
             scores.append(float('-inf') if not example['score'].isdigit() else float(example['score']))
         quality = np.asarray([prices[true_index] / scores[true_index] for true_index in search_space])
-        similarity = np.asarray([cosine(features[0].toarray()[0], benchmark_coordinates) for true_index in search_space])
-        cost = quality + LAMBDA * similarity
+        similarity = np.asarray([-1 * np.linalg.norm(features[true_index].toarray()[0] - benchmark_coordinates) for true_index in search_space])
+        cost = np.multiply(ETA, quality) - np.multiply(LAMBDA, similarity)
         selection = np.argmin(cost)
         while selection in current_recommendations:
             cost[selection] = float('inf')
             selection = np.argmin(cost)
-        print('Choosing wine with index',selection,'with price', prices[selection])
+        # print('Choosing wine with index',selection,'with price', prices[selection])
         return selection
 
-    def predict(self, model, history, examples, features):
+    def predictWine(self, seen, model, history, examples, features, isWildCard):
+        cluster_index = self.select_cluster(history) # one cluster index
+        covariance = 0
+        if type(model) == ClusterEM:
+            covariance = model.get_covariances()[cluster_index]
+        if isWildCard:
+            covariance *= 20
+        benchmark_coordinates = self.select_cluster_coordinates(history, cluster_index, covariance, model) # Selecting the wine options from which we will optimize to find the ideal wine
+        search_space = self.get_search_space(model, history, cluster_index, benchmark_coordinates)
+        recommendation = self.select_wine(benchmark_coordinates, search_space, examples, features, seen)
+        return recommendation
+
+    def predict(self, model, history, examples, features, demoClusters=None):
+        if demoClusters:
+            return self.predictDemo(model, history, examples, features, demoClusters)
+
         recommendations = []
         for i in range(NUM_BETS):
-            cluster_index = self.select_cluster(history) # one cluster index
-            covariance = 0 if type(model) == KMeans else model.get_covariances()[cluster_index]
-            benchmark_coordinates = self.select_cluster_coordinates(history, cluster_index, covariance, model) # Selecting the wine options from which we will optimize to find the ideal wine
-            search_space = self.get_search_space(model, history, cluster_index, benchmark_coordinates)
-            recommendation = self.select_wine(benchmark_coordinates, search_space, examples, features, recommendations)
-            recommendations.append(recommendation)
+            recommendations.append(self.predictWine(recommendations, model, history, examples, features, False))
         for i in range(NUM_WILDCARDS):
-            cluster_index = self.select_cluster(history) # one cluster index
-            covariance = 0 if type(model) == KMeans else model.get_covariances()[cluster_index] * 20
-            benchmark_coordinates = self.select_cluster_coordinates(history, cluster_index, covariance, model) # Selecting the wine options from which we will optimize to find the ideal wine
-            search_space = self.get_search_space(model, history, cluster_index, benchmark_coordinates)
-            recommendation = self.select_wine(benchmark_coordinates, search_space, examples, features, recommendations)
-            recommendations.append(recommendation)
-        return recommendations              
+            recommendations.append(self.predictWine(recommendations, model, history, examples, features, True))
+        return recommendations    
+
+    def predictWineDemo(self, seen, model, history, examples, features, cluster_index):
+        benchmark_coordinates = model.em.means_[cluster_index]
+        search_space = self.get_search_space(model, history, cluster_index, benchmark_coordinates)
+        recommendation = self.select_wine(benchmark_coordinates, search_space, examples, features, seen)
+        return recommendation
+
+    # only works for EM!!
+    def predictDemo(self, model, history, examples, features, demoClusters):
+        recommendations = []
+        for i in range(NUM_BETS):
+            cluster_index = random.choice(demoClusters)
+            recommendations.append(self.predictWineDemo(recommendations, model, history, examples, features, cluster_index))
+        for i in range(NUM_WILDCARDS):
+            cluster_index = random.choice(range(len(model.em.means_)))
+            recommendations.append(self.predictWineDemo(recommendations, model, history, examples, features, cluster_index))
+        return recommendations
 
